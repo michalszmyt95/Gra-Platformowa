@@ -16,6 +16,15 @@ namespace GraPlatformowa
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Texture2D testBlock, playerTexture;
+        //Song bgMusic;
+
+        Rectangle a = new Rectangle(100, 300, (int)(50),50);
+        Rectangle b = new Rectangle(152, 300, (int)(50), 50);
+        Rectangle c = new Rectangle(204, 300, (int)(50),50);
+
+        Player player;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -24,16 +33,24 @@ namespace GraPlatformowa
 
         protected override void Initialize() // Inicjalizacja zewnêtrznych zasobów gry (takich jak muzyka)
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
         protected override void LoadContent() // Pobieranie zewnêtrznych zasobów do projektu.
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+            // Stworzono obiekt za pomoc¹ konstrukora new SpriteBatch(), który u¿ywany jest do renderowania tekstur.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            //£adowanie zasobów:
+            testBlock = Content.Load<Texture2D>("blue2");
+            playerTexture = Content.Load<Texture2D>("pl1");
+            //bgMusic = Content.Load<Song>("bgMusic1");
+            // Odtwarzanie muzyki przy starcie aplikacji
+            //MediaPlayer.Play(bgMusic);
+            // Zapêtlanie muzyki
+            MediaPlayer.IsRepeating = true;
+
+            player = new Player(playerTexture);
+
         }
 
         protected override void UnloadContent()
@@ -41,13 +58,29 @@ namespace GraPlatformowa
             // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        protected override void Update(GameTime gameTime) // Metoda wywo³uje siê 60 razy na sekundê - pêtla gry.
+        protected override void Update(GameTime gameTime) // Metoda wywo³uje siê 60 razy na sekundê - pêtla gry(input, kolizje, dŸwiêk).
         {
+            //Sterowanie:
+            KeyboardState stan = Keyboard.GetState();
+            if (stan.IsKeyDown(Keys.Down))
+            {
+                //y += 1;
+            }
+            else if (stan.IsKeyDown(Keys.Up))
+            {
+                //y -= 5;
+            }
+            else if (stan.IsKeyDown(Keys.Left))
+            {
+                //x -= 1;
+            }
+            else if (stan.IsKeyDown(Keys.Right))
+            {
+                //x += 1;
+            }
+            
 
+            // animacja bazuj¹ca na czasie
             base.Update(gameTime);
         }
 
@@ -55,9 +88,22 @@ namespace GraPlatformowa
         /// S³u¿y do odœwie¿ania wyœwietlanych elementów
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Chocolate);
+            GraphicsDevice.Clear(Color.LightCyan);
 
-            // TODO: Add your drawing code here
+
+
+            // Rozpoczynanie rysowania:
+            spriteBatch.Begin();
+            // Rysowanie elementów:
+            spriteBatch.Draw(testBlock, a, Color.White);
+            spriteBatch.Draw(testBlock, b, Color.White);
+            spriteBatch.Draw(testBlock, c, Color.White);
+            //RUCH:
+
+             // spriteBatch.Draw(testBlock, gracz, col);
+
+            // Zamykanie rysowania:
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

@@ -14,9 +14,7 @@ namespace GraPlatformowa
 {
     class GameObject
     {
-        public double x = 0;
-        public double y = 0;
-        public double scaleX = 1;
-        public double scaleY = 1;
+        protected Vector2 position;
+        protected Vector2 scale;       
     }
 }
