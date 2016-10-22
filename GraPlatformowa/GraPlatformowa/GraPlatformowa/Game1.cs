@@ -32,13 +32,16 @@ namespace GraPlatformowa
             Content.RootDirectory = "Content"; // Katalog, w którym znajduj¹ siê zasoby gry.
         }
 
-        protected override void Initialize() // Inicjalizacja zewnêtrznych zasobów gry (takich jak muzyka)
+        // Inicjalizacja zewnêtrznych zasobów gry (takich jak muzyka)
+        protected override void Initialize()
         {
             base.Initialize();
-            inputManager = new InputManager(player, Keyboard.GetState());
+            inputManager = new InputManager(player);
         }
 
-        protected override void LoadContent() // Pobieranie zewnêtrznych zasobów do projektu.
+
+        // Pobieranie zewnêtrznych zasobów do projektu.
+        protected override void LoadContent()
         {
             // Stworzono obiekt za pomoc¹ konstrukora new SpriteBatch(), który u¿ywany jest do renderowania tekstur.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -56,29 +59,22 @@ namespace GraPlatformowa
 
         }
 
-        protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
-        }
+        protected override void UnloadContent(){}
 
-        protected override void Update(GameTime gameTime) // Metoda wywo³uje siê 60 razy na sekundê - pêtla gry(input, kolizje, dŸwiêk).
+        // Metoda wywo³uje siê 60 razy na sekundê - pêtla gry(input, kolizje, dŸwiêk):
+        protected override void Update(GameTime gameTime)
         {
+            player.updateKeyboardState();
             player.Move();
-            inputManager.Skok();
             // animacja bazuj¹ca na czasie
             base.Update(gameTime);
         }
-
-
-
 
         /// Metoda wywo³ywana tak czêsto jak to mo¿liwe, po metodzie Update(),
         /// S³u¿y do odœwie¿ania wyœwietlanych elementów
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.LightCyan);
-
-
+            GraphicsDevice.Clear(Color.LightCyan); //Pierwsze wyœwietla siê t³o.
 
             // Rozpoczynanie rysowania:
             spriteBatch.Begin();
@@ -86,13 +82,9 @@ namespace GraPlatformowa
             spriteBatch.Draw(testBlock, a, Color.White);
             spriteBatch.Draw(testBlock, b, Color.White);
             spriteBatch.Draw(testBlock, c, Color.White);
-            //RUCH:
 
-            // spriteBatch.Draw(testBlock, gracz, col);
             player.Draw(spriteBatch);
-            // Zamykanie rysowania:
-            spriteBatch.End();
-
+            spriteBatch.End();// Zamykanie rysowania:
 
 
             base.Draw(gameTime);
