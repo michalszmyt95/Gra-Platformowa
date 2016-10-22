@@ -14,7 +14,7 @@ namespace GraPlatformowa
 {
     class GameObject
     {
-        protected Vector2 position;
-        protected Vector2 scale;       
+        public Vector2 position = new Vector2(100, 100);
+        public Vector2 scale = new Vector2(70, 70);
     }
 }

@@ -24,6 +24,7 @@ namespace GraPlatformowa
         Rectangle c = new Rectangle(204, 300, (int)(50),50);
 
         Player player;
+        InputManager inputManager;
 
         public Game1()
         {
@@ -34,7 +35,9 @@ namespace GraPlatformowa
         protected override void Initialize() // Inicjalizacja zewnêtrznych zasobów gry (takich jak muzyka)
         {
             base.Initialize();
+            inputManager = new InputManager(player, Keyboard.GetState());
         }
+
         protected override void LoadContent() // Pobieranie zewnêtrznych zasobów do projektu.
         {
             // Stworzono obiekt za pomoc¹ konstrukora new SpriteBatch(), który u¿ywany jest do renderowania tekstur.
@@ -60,29 +63,14 @@ namespace GraPlatformowa
 
         protected override void Update(GameTime gameTime) // Metoda wywo³uje siê 60 razy na sekundê - pêtla gry(input, kolizje, dŸwiêk).
         {
-            //Sterowanie:
-            KeyboardState stan = Keyboard.GetState();
-            if (stan.IsKeyDown(Keys.Down))
-            {
-                //y += 1;
-            }
-            else if (stan.IsKeyDown(Keys.Up))
-            {
-                //y -= 5;
-            }
-            else if (stan.IsKeyDown(Keys.Left))
-            {
-                //x -= 1;
-            }
-            else if (stan.IsKeyDown(Keys.Right))
-            {
-                //x += 1;
-            }
-            
-
+            player.Move();
+            inputManager.Skok();
             // animacja bazuj¹ca na czasie
             base.Update(gameTime);
         }
+
+
+
 
         /// Metoda wywo³ywana tak czêsto jak to mo¿liwe, po metodzie Update(),
         /// S³u¿y do odœwie¿ania wyœwietlanych elementów
@@ -100,10 +88,12 @@ namespace GraPlatformowa
             spriteBatch.Draw(testBlock, c, Color.White);
             //RUCH:
 
-             // spriteBatch.Draw(testBlock, gracz, col);
-
+            // spriteBatch.Draw(testBlock, gracz, col);
+            player.Draw(spriteBatch);
             // Zamykanie rysowania:
             spriteBatch.End();
+
+
 
             base.Draw(gameTime);
         }

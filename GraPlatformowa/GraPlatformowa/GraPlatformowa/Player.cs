@@ -16,6 +16,8 @@ namespace GraPlatformowa
     {
         Texture2D texture;
         int currentFrame; //Potrzebne do animacji
+        int speed = 2;
+        double velocity = 0;
         const int FRAMES = 6;
         public Player(Texture2D texturePlayer)
         {
@@ -27,33 +29,29 @@ namespace GraPlatformowa
         }
         public void Draw(SpriteBatch spriteBatch) //Funkcja wywoływana w Draw gry.
         {
-
+            spriteBatch.Draw(this.texture, new Rectangle((int)this.position.X,(int)this.position.Y,(int)this.scale.X,(int)this.scale.Y), Color.White);   
         }
         public Vector2 GetPosition() { return this.position; }
 
-        KeyboardState stanKlawiatury = Keyboard.GetState();
+        KeyboardState kbState = Keyboard.GetState();
 
         //Funkcje determinujące ruch:
         public void MoveLeft()
         {
-            if (stanKlawiatury.IsKeyDown(Keys.Left))
-            {
-                //x -= 1;
-            }
+            this.position.X -= this.speed;
         }
         public void MoveRight()
         {
-            if (stanKlawiatury.IsKeyDown(Keys.Right))
-            {
-                //x += 1;
-            }
+            this.position.X += this.speed;
         }
         public void Jump()
         {
-            if (stanKlawiatury.IsKeyDown(Keys.Up))
-            {
-                //y -= 5;
-            }
+            this.position.Y -= this.speed;
+        }
+
+        public void Move()
+        {
+
         }
     }
 }
