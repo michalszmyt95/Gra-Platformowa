@@ -29,10 +29,18 @@ namespace GraPlatformowa
             foreach (Rectangle obj in this.staticObj)
             {
                 //Metoda Intersects sprawdza, czy pole dynamicznego obiektu zawiera się w statycznym obiekcie obj:
+                
                 if (this.dynamicObj.Intersects(obj)) {
-                    Console.WriteLine("test");
                     return true;
                 }
+                
+                /*
+                if (this.dynamicObj.Y > obj.Y && this.dynamicObj.X < obj.X + obj.Width && this.dynamicObj.X > obj.X)
+                {
+                    return true;
+                }
+                */
+                
             }
             return false;
         }

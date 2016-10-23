@@ -17,28 +17,20 @@ namespace GraPlatformowa
         Texture2D texture;
         KeyboardState kbState;
 
-        int currentFrame; //Potrzebne do animacji
-        int speed = 2;
+        int speed = 3;
         public double gravity = 0;
         public double velocity = 0.1;
-        const int FRAMES = 6;
-        public Rectangle rectangle;
+        private double vx;
+        private double vy;
 
-        private void UpdateRectangle()
-        {
-            this.rectangle.X = (int)this.position.X;
-            this.rectangle.Y = (int)this.position.Y;
-            this.rectangle.Width = (int)this.scale.X;
-            this.rectangle.Height = (int)this.scale.Y;
-        }
-
-        public Player(int X,int Y,Texture2D texturePlayer)
+        //Konstruktor gracza(położenie X,Y, lista obiektów z którymi gracz koliduje, tekstura gracza:
+        public Player(int X, int Y, Texture2D texturePlayer)
         {
             this.texture = texturePlayer;
             this.position.X = X;
             this.position.Y = Y;
-            this.UpdateRectangle();
         }
+
         public void Update() // Funkcja wywoływana w Update gry.
         {
             this.UpdateKeyboardState();
@@ -46,12 +38,22 @@ namespace GraPlatformowa
             this.MoveRight();
             this.Jump();
             this.Gravity();
-            this.UpdateRectangle();
         }
 
         public void Draw(SpriteBatch spriteBatch) //Funkcja wywoływana w Draw gry.
         {
-            spriteBatch.Draw(this.texture, rectangle, Color.White);
+            spriteBatch.Draw(this.texture, this.position, Color.White);
+            /*
+            Spritebatch.Draw(myTexture, // Texture
+    myPosition,             // Position
+    sourceRect,             // Source rectangle
+    Color.White, // If you don't want to add tinting use white
+    0,                      // Rotation
+    null,                   // Origin
+    Scale,                  // You guessed it
+    SpriteEffects.None,     // Mirroring effects
+    depth);                 // Layer depth
+    */
         }
 
 
@@ -63,27 +65,27 @@ namespace GraPlatformowa
         }
 
         //Funkcje determinujące ruch:
-        public void MoveLeft()
+        private void MoveLeft()
         {
             if (kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.Left))
                 this.position.X -= this.speed;
         }
-        public void MoveRight()
+        private void MoveRight()
         {
             if (kbState.IsKeyDown(Keys.D) || kbState.IsKeyDown(Keys.Right))
                 this.position.X += this.speed;
         }
-        public void Jump()
+        private void Jump()
         {
-            if (kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.Space))
+            if ((kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.Space) || kbState.IsKeyDown(Keys.Space)))
+            {
                 this.position.Y -= this.speed;
+            }
         }
         private void Gravity()
         {
-            this.position.Y += (int)this.gravity;
-            gravity += velocity;
+                this.position.Y += (int)this.gravity;
+                this.gravity += 0.1; 
         }
-
-
     }
 }
