@@ -19,12 +19,15 @@ namespace GraPlatformowa
         Texture2D testBlock, playerTexture;
         //Song bgMusic;
 
-        Rectangle a = new Rectangle(100, 300, (int)(50),50);
-        Rectangle b = new Rectangle(152, 300, (int)(50), 50);
-        Rectangle c = new Rectangle(204, 300, (int)(50),50);
+        Rectangle a = new Rectangle(20, 300, 50, 50);
+        Rectangle b = new Rectangle(152, 300, 50, 50);
+        Rectangle c = new Rectangle(204, 300, 50, 50);
+        Rectangle d = new Rectangle(256, 300, 50, 50);
+
+        List<Rectangle> lista = new List<Rectangle>();
 
         Player player;
-        InputManager inputManager;
+        CollisionDetector col;
 
         public Game1()
         {
@@ -36,7 +39,6 @@ namespace GraPlatformowa
         protected override void Initialize()
         {
             base.Initialize();
-            inputManager = new InputManager(player);
         }
 
 
@@ -55,17 +57,32 @@ namespace GraPlatformowa
             // Zapêtlanie muzyki
             MediaPlayer.IsRepeating = true;
 
-            player = new Player(playerTexture);
+            player = new Player(10,10,playerTexture);
+
+            lista.Add(a);
+            lista.Add(b);
+            lista.Add(c);
+            lista.Add(d);
+
+            col = new CollisionDetector(lista);
 
         }
 
         protected override void UnloadContent(){}
 
+
         // Metoda wywo³uje siê 60 razy na sekundê - pêtla gry(input, kolizje, dŸwiêk):
         protected override void Update(GameTime gameTime)
         {
-            player.updateKeyboardState();
-            player.Move();
+            player.Update();
+            
+            if (col.Collision(player.rectangle))
+                player.gravity = 0;
+            else
+                player.gravity += player.velocity;
+
+
+
             // animacja bazuj¹ca na czasie
             base.Update(gameTime);
         }
@@ -82,6 +99,7 @@ namespace GraPlatformowa
             spriteBatch.Draw(testBlock, a, Color.White);
             spriteBatch.Draw(testBlock, b, Color.White);
             spriteBatch.Draw(testBlock, c, Color.White);
+            spriteBatch.Draw(testBlock, d, Color.White);
 
             player.Draw(spriteBatch);
             spriteBatch.End();// Zamykanie rysowania:
