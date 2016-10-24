@@ -17,31 +17,27 @@ namespace GraPlatformowa
         Texture2D texture;
         KeyboardState kbState;
         CollisionDetector collision;
-        List<Rectangle> lista = new List<Rectangle>();
 
-        int speed = 3;
-        public double gravity = 0;
-        public double velocity = 0.1;
-        private double vx;
-        private double vy;
+        private float speed = 3f;
+        private float gravity = 3f;
+        private Vector2 velocity = new Vector2();
+        private bool jumping = true;
 
         //Konstruktor gracza(położenie X,Y, lista obiektów z którymi gracz koliduje, tekstura gracza:
-        public Player(int X, int Y, Texture2D texturePlayer, List<Rectangle> lista)
+        public Player(Vector2 newPosition, Texture2D newTexture)
         {
-            this.texture = texturePlayer;
-            this.position.X = X;
-            this.position.Y = Y;
-            this.scale.X = texturePlayer.Width;
-            this.scale.Y = texturePlayer.Height;
-            this.lista = lista;
-            this.collision = new CollisionDetector(ref this.position, ref this.scale, this.lista);
+            this.texture = newTexture;
+            this.position = newPosition;
+            this.scale.X = newTexture.Width;
+            this.scale.Y = newTexture.Height;
+            this.collision = new CollisionDetector();
         }
 
-        public void Update() // Funkcja wywoływana w Update gry.
+        public void Update(GameTime gameTime) // Funkcja wywoływana w Update gry.
         {
+            this.position += this.velocity;
             this.UpdateKeyboardState();
-            this.MoveLeft();
-            this.MoveRight();
+            this.Move();
             this.Jump();
             this.Gravity();
         }
@@ -60,30 +56,51 @@ namespace GraPlatformowa
         }
 
         //Funkcje determinujące ruch:
-        private void MoveLeft()
+        private void Move()
         {
             if (kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.Left))
-                this.position.X -= this.speed;
-        }
-        private void MoveRight()
-        {
-            if (kbState.IsKeyDown(Keys.D) || kbState.IsKeyDown(Keys.Right))
-                this.position.X += this.speed;
+                this.velocity.X = -this.speed;
+            else if (kbState.IsKeyDown(Keys.D) || kbState.IsKeyDown(Keys.Right))
+                this.velocity.X = this.speed;
+            else
+                this.velocity.X = 0;
         }
         private void Jump()
         {
-            if ((kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.Space) || kbState.IsKeyDown(Keys.Space)))
+            if ((kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.Space) || kbState.IsKeyDown(Keys.Space)) && !this.jumping)
             {
-                this.position.Y -= this.speed;
+                this.velocity.Y = -10f;
+                this.position.Y -= 5;
+                this.jumping = true;
             }
+            
+            if(this.jumping)
+            {
+                velocity.Y += 0.1f * gravity;
+            }
+            
         }
         private void Gravity()
         {
-            if (!collision.Collision(this.position, this.scale))
+            //foreach (Rectangle obj in SceneManager.ObiektyStatyczne)
+            //{
+            Rectangle? obj = collision.With(this.position, this.scale);
+
+            if (obj != null)
             {
-                this.position.Y += (int)this.gravity;
-                this.gravity += 0.1;
+                this.jumping = false;
+                this.position.Y = obj.Value.Y - this.scale.Y;
             }
+            else
+            {
+                this.jumping = true;
+            }
+            //}
+            if (!this.jumping)
+            {
+                this.velocity.Y = 0;
+            }
+            
         }
     }
 }

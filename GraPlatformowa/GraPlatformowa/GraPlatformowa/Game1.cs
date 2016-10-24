@@ -24,8 +24,6 @@ namespace GraPlatformowa
         Rectangle c = new Rectangle(220, 300, 100, 100);
         Rectangle d = new Rectangle(550, 300, 100, 100);
 
-        List<Rectangle> lista = new List<Rectangle>();
-
         Player player;
 
         public Game1()
@@ -38,6 +36,12 @@ namespace GraPlatformowa
         protected override void Initialize()
         {
             base.Initialize();
+            SceneManager.ObiektyStatyczne.Add(a);
+            SceneManager.ObiektyStatyczne.Add(b);
+            SceneManager.ObiektyStatyczne.Add(c);
+            SceneManager.ObiektyStatyczne.Add(d);
+
+            player = new Player(new Vector2(10,10), playerTexture);
         }
 
 
@@ -56,13 +60,6 @@ namespace GraPlatformowa
             // Zapêtlanie muzyki
             MediaPlayer.IsRepeating = true;
 
-            lista.Add(a);
-            lista.Add(b);
-            lista.Add(c);
-            lista.Add(d);
-
-            player = new Player(10, 10, playerTexture, lista);
-
         }
 
         protected override void UnloadContent(){}
@@ -71,7 +68,7 @@ namespace GraPlatformowa
         // Metoda wywo³uje siê 60 razy na sekundê - pêtla gry(input, kolizje, dŸwiêk):
         protected override void Update(GameTime gameTime)
         {
-            player.Update();
+            player.Update(gameTime);
             // animacja bazuj¹ca na czasie
             base.Update(gameTime);
         }
