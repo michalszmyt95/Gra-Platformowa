@@ -16,6 +16,8 @@ namespace GraPlatformowa
     {
         Texture2D texture;
         KeyboardState kbState;
+        CollisionDetector collision;
+        List<Rectangle> lista = new List<Rectangle>();
 
         int speed = 3;
         public double gravity = 0;
@@ -24,11 +26,15 @@ namespace GraPlatformowa
         private double vy;
 
         //Konstruktor gracza(położenie X,Y, lista obiektów z którymi gracz koliduje, tekstura gracza:
-        public Player(int X, int Y, Texture2D texturePlayer)
+        public Player(int X, int Y, Texture2D texturePlayer, List<Rectangle> lista)
         {
             this.texture = texturePlayer;
             this.position.X = X;
             this.position.Y = Y;
+            this.scale.X = texturePlayer.Width;
+            this.scale.Y = texturePlayer.Height;
+            this.lista = lista;
+            this.collision = new CollisionDetector(ref this.position, ref this.scale, this.lista);
         }
 
         public void Update() // Funkcja wywoływana w Update gry.
@@ -43,17 +49,6 @@ namespace GraPlatformowa
         public void Draw(SpriteBatch spriteBatch) //Funkcja wywoływana w Draw gry.
         {
             spriteBatch.Draw(this.texture, this.position, Color.White);
-            /*
-            Spritebatch.Draw(myTexture, // Texture
-    myPosition,             // Position
-    sourceRect,             // Source rectangle
-    Color.White, // If you don't want to add tinting use white
-    0,                      // Rotation
-    null,                   // Origin
-    Scale,                  // You guessed it
-    SpriteEffects.None,     // Mirroring effects
-    depth);                 // Layer depth
-    */
         }
 
 
@@ -84,8 +79,11 @@ namespace GraPlatformowa
         }
         private void Gravity()
         {
+            if (!collision.Collision(this.position, this.scale))
+            {
                 this.position.Y += (int)this.gravity;
-                this.gravity += 0.1; 
+                this.gravity += 0.1;
+            }
         }
     }
 }

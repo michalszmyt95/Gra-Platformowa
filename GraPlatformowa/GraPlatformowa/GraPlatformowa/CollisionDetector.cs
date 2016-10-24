@@ -14,33 +14,31 @@ namespace GraPlatformowa
 {
     class CollisionDetector
     {
-        Rectangle dynamicObj; //Obiekt dynamiczny, który ma kolidować, np. Gracz.
-        List<Rectangle> staticObj = new List<Rectangle>(); //Lista obiektów statycznych prostokątów, z którymi kolidować ma obiektZmienny.
+        Vector2 dynamicObjPosition; //Obiekt dynamiczny, który ma kolidować, np. Gracz.
+        Vector2 dynamicObjScale;
+        List<Rectangle> staticObj = new List<Rectangle>(); //Lista obiektów nieruchomych prostokątów, z którymi kolidować ma obiektZmienny.
 
-        //Konstruktor dodający obiekty z listy tych co mają kolidować, do CollisionDetector
-        public CollisionDetector(List<Rectangle> staticObj)
+        //Konstruktor dodający obiekt dynamiczny oraz obiekty z listy tych co mają kolidować, do CollisionDetector
+        public CollisionDetector(ref Vector2 dynamicObjPosition, ref Vector2 dynamicObjScale, List<Rectangle> staticObj)
         {
+            this.dynamicObjPosition = dynamicObjPosition;
+            this.dynamicObjScale = dynamicObjScale;
             this.staticObj = staticObj;
         }
 
-        public bool Collision(Rectangle dynamicObj) //Sprawdzenie kolizji.
+        public bool Collision(Vector2 dynamicObjPosition, Vector2 dynamicObjScale) //Sprawdzenie kolizji.
         {
-            this.dynamicObj = dynamicObj;
+            this.dynamicObjPosition = dynamicObjPosition;
+            this.dynamicObjScale = dynamicObjScale;
+
             foreach (Rectangle obj in this.staticObj)
             {
-                //Metoda Intersects sprawdza, czy pole dynamicznego obiektu zawiera się w statycznym obiekcie obj:
-                
-                if (this.dynamicObj.Intersects(obj)) {
-                    return true;
-                }
-                
-                /*
-                if (this.dynamicObj.Y > obj.Y && this.dynamicObj.X < obj.X + obj.Width && this.dynamicObj.X > obj.X)
+                if (this.dynamicObjPosition.Y + dynamicObjScale.Y > obj.Y)
                 {
+                    Console.WriteLine("test");
                     return true;
                 }
-                */
-                
+                Console.WriteLine("test: "+ this.dynamicObjPosition);
             }
             return false;
         }

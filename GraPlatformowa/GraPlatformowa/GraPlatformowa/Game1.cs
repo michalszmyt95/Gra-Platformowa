@@ -19,15 +19,14 @@ namespace GraPlatformowa
         Texture2D testBlock, playerTexture;
         //Song bgMusic;
 
-        Vector2 a = new Vector2(0, 300);
-        Vector2 b = new Vector2(110, 300);
-        Vector2 c = new Vector2(220, 300);
-        Vector2 d = new Vector2(550, 300);
+        Rectangle a = new Rectangle(0, 300, 100, 100);
+        Rectangle b = new Rectangle(110, 300, 100, 100);
+        Rectangle c = new Rectangle(220, 300, 100, 100);
+        Rectangle d = new Rectangle(550, 300, 100, 100);
 
-        List<Texture2D> lista = new List<Texture2D>();
+        List<Rectangle> lista = new List<Rectangle>();
 
         Player player;
-        CollisionDetector col;
 
         public Game1()
         {
@@ -57,8 +56,12 @@ namespace GraPlatformowa
             // Zapêtlanie muzyki
             MediaPlayer.IsRepeating = true;
 
-            player = new Player(10, 10, playerTexture);
+            lista.Add(a);
+            lista.Add(b);
+            lista.Add(c);
+            lista.Add(d);
 
+            player = new Player(10, 10, playerTexture, lista);
 
         }
 
