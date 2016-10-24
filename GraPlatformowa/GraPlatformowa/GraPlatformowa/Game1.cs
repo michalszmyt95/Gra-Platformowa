@@ -19,16 +19,19 @@ namespace GraPlatformowa
         Texture2D testBlock, playerTexture;
         //Song bgMusic;
 
-        Rectangle a = new Rectangle(0, 300, 100, 100);
-        Rectangle b = new Rectangle(110, 300, 100, 100);
-        Rectangle c = new Rectangle(220, 300, 100, 100);
-        Rectangle d = new Rectangle(550, 300, 100, 100);
-
         Player player;
+        Block block1;
+        Block block2;
+        Block block3;
+        Block block4;
+        Block block5;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferWidth = 1440;
+            graphics.PreferredBackBufferHeight = 720;
             Content.RootDirectory = "Content"; // Katalog, w którym znajduj¹ siê zasoby gry.
         }
 
@@ -36,12 +39,13 @@ namespace GraPlatformowa
         protected override void Initialize()
         {
             base.Initialize();
-            SceneManager.ObiektyStatyczne.Add(a);
-            SceneManager.ObiektyStatyczne.Add(b);
-            SceneManager.ObiektyStatyczne.Add(c);
-            SceneManager.ObiektyStatyczne.Add(d);
 
             player = new Player(new Vector2(10,10), playerTexture);
+            block1 = new Block(new Vector2(0, 200), testBlock);
+            block2 = new Block(new Vector2(200, 400), testBlock);
+            block3 = new Block(new Vector2(300, 600), testBlock);
+            block4 = new Block(new Vector2(500, 200), testBlock);
+            block5 = new Block(new Vector2(800, 400), testBlock);
         }
 
 
@@ -81,14 +85,16 @@ namespace GraPlatformowa
 
             // Rozpoczynanie rysowania:
             spriteBatch.Begin();
-            // Rysowanie elementów:
-            spriteBatch.Draw(testBlock, a, Color.White);
-            spriteBatch.Draw(testBlock, b, Color.White);
-            spriteBatch.Draw(testBlock, c, Color.White);
-            spriteBatch.Draw(testBlock, d, Color.White);
-
+            // Rysowanie bloków:
+            block1.Draw(spriteBatch);
+            block2.Draw(spriteBatch);
+            block3.Draw(spriteBatch);
+            block4.Draw(spriteBatch);
+            block5.Draw(spriteBatch);
+            // Rysowanie gracza:
             player.Draw(spriteBatch);
-            spriteBatch.End();// Zamykanie rysowania:
+            // Zamykanie rysowania:
+            spriteBatch.End();
 
 
             base.Draw(gameTime);

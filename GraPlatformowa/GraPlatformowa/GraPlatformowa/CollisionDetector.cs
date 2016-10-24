@@ -9,7 +9,7 @@ namespace GraPlatformowa
         //Sprawdzanie zajścia kolizji statycznego obiektu z listy SceneManagera z obiektem dynamicznym, np. graczem:
         public Rectangle? With(Vector2 dynamicObjPosition, Vector2 dynamicObjScale)
         {
-            foreach (Rectangle obj in SceneManager.ObiektyStatyczne)
+            foreach (Rectangle obj in SceneManager.StaticObjects)
             {
                 if ((dynamicObjPosition.Y + dynamicObjScale.Y) > obj.Y && (dynamicObjPosition.X + dynamicObjScale.X) >= obj.X 
                     && dynamicObjPosition.X <= (obj.X + obj.Width) && dynamicObjPosition.Y < (obj.Y + obj.Height))

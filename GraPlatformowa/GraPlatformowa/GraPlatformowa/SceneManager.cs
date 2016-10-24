@@ -15,6 +15,6 @@ namespace GraPlatformowa
     class SceneManager
     {
         //Ogólnodostępna lista wszystkich obiektów statycznych w grze:
-        public static List<Rectangle> ObiektyStatyczne = new List<Rectangle>();
+        public static List<Rectangle> StaticObjects = new List<Rectangle>();
     }
 }

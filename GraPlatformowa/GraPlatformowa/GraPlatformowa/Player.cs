@@ -18,8 +18,9 @@ namespace GraPlatformowa
         KeyboardState kbState;
         CollisionDetector collision;
 
-        private float speed = 3f;
-        private float gravity = 3f;
+        private float speed = 6f;
+        private float gravity = 5f;
+        private float jumpSpeed = 14.5f;
         private Vector2 velocity = new Vector2();
         private bool jumping = true;
 
@@ -67,10 +68,9 @@ namespace GraPlatformowa
         }
         private void Jump()
         {
-            if ((kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.Space) || kbState.IsKeyDown(Keys.Space)) && !this.jumping)
+            if ((kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.Space) || kbState.IsKeyDown(Keys.Up)) && !this.jumping)
             {
-                this.velocity.Y = -10f;
-                this.position.Y -= 5;
+                this.velocity.Y = -jumpSpeed;
                 this.jumping = true;
             }
             
