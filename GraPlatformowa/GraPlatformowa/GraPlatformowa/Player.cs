@@ -18,20 +18,22 @@ namespace GraPlatformowa
         KeyboardState kbState;
         CollisionDetector collision;
 
-        private float speed = 6f;
-        private float gravity = 5f;
-        private float jumpSpeed = 14.5f;
+        private float speed = 6.5f;
+        private float gravity = 2.5f;
+        private float jumpSpeed = 13f;
         private Vector2 velocity = new Vector2();
-        private bool jumping = true;
+        private Rectangle rect;
+        private bool standing = false;
 
         //Konstruktor gracza(położenie X,Y, lista obiektów z którymi gracz koliduje, tekstura gracza:
         public Player(Vector2 newPosition, Texture2D newTexture)
         {
             this.texture = newTexture;
             this.position = newPosition;
-            this.scale.X = newTexture.Width;
-            this.scale.Y = newTexture.Height;
+            //this.scale.X = newTexture.Width;
+            //this.scale.Y = newTexture.Height;
             this.collision = new CollisionDetector();
+            this.rect = new Rectangle(0,0, (int) this.scale.X, (int)this.scale.Y);
         }
 
         public void Update(GameTime gameTime) // Funkcja wywoływana w Update gry.
@@ -40,12 +42,12 @@ namespace GraPlatformowa
             this.UpdateKeyboardState();
             this.Move();
             this.Jump();
-            this.Gravity();
+            this.Collision();
         }
 
         public void Draw(SpriteBatch spriteBatch) //Funkcja wywoływana w Draw gry.
         {
-            spriteBatch.Draw(this.texture, this.position, Color.White);
+            spriteBatch.Draw(this.texture, this.position, this.rect, Color.White);
         }
 
 
@@ -59,44 +61,50 @@ namespace GraPlatformowa
         //Funkcje determinujące ruch:
         private void Move()
         {
-            if (kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.Left))
-                this.velocity.X = -this.speed;
-            else if (kbState.IsKeyDown(Keys.D) || kbState.IsKeyDown(Keys.Right))
-                this.velocity.X = this.speed;
+            if ((kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.Left)))
+            {
+                    this.velocity.X = -this.speed;
+            }
+            else if ((kbState.IsKeyDown(Keys.D) || kbState.IsKeyDown(Keys.Right)))
+            {
+                    this.velocity.X = this.speed;
+            }
             else
                 this.velocity.X = 0;
         }
         private void Jump()
         {
-            if ((kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.Space) || kbState.IsKeyDown(Keys.Up)) && !this.jumping)
+            if ((kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.Space) || kbState.IsKeyDown(Keys.Up)) && this.standing)
             {
-                this.velocity.Y = -jumpSpeed;
-                this.jumping = true;
+                    this.velocity.Y = -jumpSpeed;
+                    this.standing = false;
             }
             
-            if(this.jumping)
+            if(!this.standing)
             {
-                velocity.Y += 0.1f * gravity;
+                velocity.Y += 0.15f * gravity; // <------ Grawitacja
             }
             
         }
-        private void Gravity()
+        private void Collision()
         {
-            //foreach (Rectangle obj in SceneManager.ObiektyStatyczne)
-            //{
+            //Jeśli funkcja collision.With() zwraca obiekt, znaczy ze gracz z danym obiektem aktualnie koliduje.
+            //W przeciwnym wypadku, gdy funkcja zwraca null, znaczy, że gracz z niczym nie koliduje.
             Rectangle? obj = collision.With(this.position, this.scale);
-
-            if (obj != null)
+            if (obj != null) 
             {
-                this.jumping = false;
-                this.position.Y = obj.Value.Y - this.scale.Y;
+                if ((this.position.Y + this.scale.Y) >= obj.Value.Y && (this.position.Y + this.scale.Y) <= obj.Value.Y + 25 && this.velocity.Y > 0)
+                {
+                    this.position.Y = obj.Value.Y - this.scale.Y;
+                    this.standing = true;
+                }
             }
             else
             {
-                this.jumping = true;
+                this.standing = false;
             }
-            //}
-            if (!this.jumping)
+
+            if (this.standing)
             {
                 this.velocity.Y = 0;
             }
