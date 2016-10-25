@@ -91,9 +91,9 @@ namespace GraPlatformowa
             //Jeśli funkcja collision.With() zwraca obiekt, znaczy ze gracz z danym obiektem aktualnie koliduje.
             //W przeciwnym wypadku, gdy funkcja zwraca null, znaczy, że gracz z niczym nie koliduje.
             Rectangle? obj = collision.With(this.position, this.scale);
-            if (obj != null) 
-            {
-                if ((this.position.Y + this.scale.Y) >= obj.Value.Y && (this.position.Y + this.scale.Y) <= obj.Value.Y + 25 && this.velocity.Y > 0)
+            if (obj != null)
+            {                                              /*  wysokosc momentu podniesienia gracza na platformie   ----VVVV   */
+                if ((this.position.Y + this.scale.Y) >= obj.Value.Y && (this.position.Y + this.scale.Y) <= obj.Value.Y + 16 && this.velocity.Y > 0)
                 {
                     this.position.Y = obj.Value.Y - this.scale.Y;
                     this.standing = true;

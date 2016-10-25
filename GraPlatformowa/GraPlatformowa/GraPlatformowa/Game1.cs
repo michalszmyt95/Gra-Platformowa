@@ -43,8 +43,8 @@ namespace GraPlatformowa
             player = new Player(new Vector2(10,10), playerTexture);
             block1 = new Block(new Vector2(0, 200), testBlock);
             block2 = new Block(new Vector2(200, 400), testBlock);
-            block3 = new Block(new Vector2(300, 600), testBlock);
-            block4 = new Block(new Vector2(500, 200), testBlock);
+            block3 = new Block(new Vector2(270, 350), testBlock);
+            block4 = new Block(new Vector2(340, 350), testBlock);
             block5 = new Block(new Vector2(800, 400), testBlock);
         }
 
