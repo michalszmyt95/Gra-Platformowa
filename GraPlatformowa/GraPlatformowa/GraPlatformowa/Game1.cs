@@ -25,6 +25,8 @@ namespace GraPlatformowa
         Block block3;
         Block block4;
         Block block5;
+        Block block6;
+        Block block7;
 
         public Game1()
         {
@@ -40,12 +42,14 @@ namespace GraPlatformowa
         {
             base.Initialize();
 
-            player = new Player(new Vector2(10,10), playerTexture);
+            player = new Player(new Vector2(800,10), playerTexture);
             block1 = new Block(new Vector2(0, 200), testBlock);
             block2 = new Block(new Vector2(200, 400), testBlock);
-            block3 = new Block(new Vector2(270, 345), testBlock);
-            block4 = new Block(new Vector2(340, 331), testBlock);
+            block3 = new Block(new Vector2(300, 385), testBlock);
+            block4 = new Block(new Vector2(400, 370), testBlock);
             block5 = new Block(new Vector2(800, 400), testBlock);
+            block6 = new Block(new Vector2(720, 294), testBlock);
+            block7 = new Block(new Vector2(900, 275), testBlock);
         }
 
 
@@ -92,6 +96,8 @@ namespace GraPlatformowa
             block3.Draw(spriteBatch);
             block4.Draw(spriteBatch);
             block5.Draw(spriteBatch);
+            block6.Draw(spriteBatch);
+            block7.Draw(spriteBatch);
             // Rysowanie gracza:
             player.Draw(spriteBatch);
             // Zamykanie rysowania:

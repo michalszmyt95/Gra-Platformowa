@@ -20,10 +20,12 @@ namespace GraPlatformowa
 
         private float speed = 6.5f;
         private float gravity = 2.5f;
-        private float jumpSpeed = 9f;
+        private float jumpSpeed = 9.5f;
         private Vector2 velocity = new Vector2();
         private Rectangle rect;
+        private int stairHeight = 15;
         private bool standing = false;
+        private bool jumping = false;
 
         //Konstruktor gracza(położenie X,Y, lista obiektów z którymi gracz koliduje, tekstura gracza:
         public Player(Vector2 newPosition, Texture2D newTexture)
@@ -80,6 +82,7 @@ namespace GraPlatformowa
             {
                     this.velocity.Y = -jumpSpeed;
                     this.standing = false;
+                    this.jumping = true;
             }
             
             if(!this.standing)
@@ -95,11 +98,23 @@ namespace GraPlatformowa
             Rectangle? obj = collision.With(this.position, this.scale);
             
             if (obj != null)
-            {     /*  przedzial wysokosci bloku, z ktorego gracz automatycznie zostanie podniesiony na góre bloku   ----VVVV   */
-                if ((this.position.Y + this.scale.Y) >= obj.Value.Y && (this.position.Y + this.scale.Y) <= obj.Value.Y + 15 && this.velocity.Y > 0)
+            {            /*  Przedzial wysokosci bloku, z ktorego gracz automatycznie zostanie podniesiony na góre bloku  -------VVVV   */
+                if ((this.position.Y + this.scale.Y) >= obj.Value.Y && (this.position.Y + this.scale.Y) <= obj.Value.Y + this.stairHeight && this.velocity.Y > 0)
                 {
-                    this.position.Y = obj.Value.Y - this.scale.Y;
-                    this.standing = true;
+                    if (!this.jumping)
+                    {
+                        this.position.Y = obj.Value.Y - this.scale.Y;
+                        this.standing = true;
+                    }
+                    // Jeśli gracz skakał zamiast tylko spadać, to zależność wchodzenia po schodach nie powinna działać, dlatego by gracz sie utrzymał na bloku,
+                    // Musi mieć dość dużą wartość spadania velocity.Y
+                    // (chodzi o to, by gracz co skoczył na zbyt wysoki blok nie został automatycznie wciągnięty na górę gdy nie pokonał całej drogi by stanąć na bloku)
+                    else if (this.jumping && this.velocity.Y > 3.1 )
+                    {
+                        this.position.Y = obj.Value.Y - this.scale.Y;
+                        this.standing = true;
+                        this.jumping = false;
+                    }
                 }
                 else
                 {
