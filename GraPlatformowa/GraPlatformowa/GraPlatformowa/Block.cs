@@ -32,13 +32,18 @@ namespace GraPlatformowa
             this.texture = newTexture;
             SceneManager.StaticObjects.Add(this.rect);
         }
+        public void Update(GameTime gametimes)
+        {
+        }
+
         public void Draw(SpriteBatch spriteBatch) //Funkcja wywoływana w Draw gry.
         {
             spriteBatch.Draw(this.texture, this.rect, Color.White);
         }
         public void Disappear()
         {
-
+            SceneManager.StaticObjects.Remove(this.rect);
+            this.rect.X = -1000;
         }
     }
 }

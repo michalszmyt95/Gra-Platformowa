@@ -20,7 +20,7 @@ namespace GraPlatformowa
 
         private float speed = 6.5f;
         private float gravity = 2.5f;
-        private float jumpSpeed = 13f;
+        private float jumpSpeed = 9f;
         private Vector2 velocity = new Vector2();
         private Rectangle rect;
         private bool standing = false;
@@ -42,7 +42,9 @@ namespace GraPlatformowa
             this.UpdateKeyboardState();
             this.Move();
             this.Jump();
+
             this.Collision();
+            this.Restart();
         }
 
         public void Draw(SpriteBatch spriteBatch) //Funkcja wywoływana w Draw gry.
@@ -86,17 +88,23 @@ namespace GraPlatformowa
             }
             
         }
-        private void Collision()
+        private Rectangle? Collision()
         {
             //Jeśli funkcja collision.With() zwraca obiekt, znaczy ze gracz z danym obiektem aktualnie koliduje.
             //W przeciwnym wypadku, gdy funkcja zwraca null, znaczy, że gracz z niczym nie koliduje.
             Rectangle? obj = collision.With(this.position, this.scale);
+            
             if (obj != null)
-            {                                              /*  wysokosc momentu podniesienia gracza na platformie   ----VVVV   */
-                if ((this.position.Y + this.scale.Y) >= obj.Value.Y && (this.position.Y + this.scale.Y) <= obj.Value.Y + 16 && this.velocity.Y > 0)
+            {     /*  przedzial wysokosci bloku, z ktorego gracz automatycznie zostanie podniesiony na góre bloku   ----VVVV   */
+                if ((this.position.Y + this.scale.Y) >= obj.Value.Y && (this.position.Y + this.scale.Y) <= obj.Value.Y + 15 && this.velocity.Y > 0)
                 {
                     this.position.Y = obj.Value.Y - this.scale.Y;
                     this.standing = true;
+                }
+                else
+                {
+                    this.standing = false; //<-- Ta linijka kodu poprawia błąd związany z utrzymywaniem
+                    // stałej pozycji gracza po wejściu na kolejny blok, jeśli między zmianą bloku nie przerwała się kolizja.
                 }
             }
             else
@@ -108,7 +116,19 @@ namespace GraPlatformowa
             {
                 this.velocity.Y = 0;
             }
-            
+
+            return obj;
+        }
+
+        //Tymczasowa funkcja u gracza, przydatna do testów:
+        private void Restart()
+        {
+            if (this.position.Y >= 1000)
+            {
+                this.velocity = new Vector2(0, 0);
+                this.position.Y = 10;
+                this.position.X = 10;
+            }
         }
     }
 }

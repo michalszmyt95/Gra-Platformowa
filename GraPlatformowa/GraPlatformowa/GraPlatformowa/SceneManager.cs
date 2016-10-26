@@ -16,5 +16,6 @@ namespace GraPlatformowa
     {
         //Ogólnodostępna lista wszystkich obiektów statycznych w grze:
         public static List<Rectangle> StaticObjects = new List<Rectangle>();
+        // Trzeba bedzie chyba jednak do tej listy obiektów dodawać chyba bloki zamiast same rectangle...
     }
 }
