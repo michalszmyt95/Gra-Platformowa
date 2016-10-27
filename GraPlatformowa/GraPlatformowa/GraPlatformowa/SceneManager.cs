@@ -30,21 +30,27 @@ namespace GraPlatformowa
 
         public void Draw()
         {
-            drawLevel1();
+            DrawLevel1();
         }
 
         private void level1()
         {
             new BlueBlock(new Vector2(0, 200));
             new BlueBlock(new Vector2(200, 400));
+            new BlueBlock(new Vector2(250, 400));
             new BlueBlock(new Vector2(300, 385));
+            new BlueBlock(new Vector2(350, 385));
             new GreenBlock(new Vector2(400, 370));
             new BlueBlock(new Vector2(800, 400));
             new BlueBlock(new Vector2(720, 295));
             new RedBlock(new Vector2(930, 275));
         }
 
-        private void drawLevel1()
+        public void Update()
+        {
+        }
+
+        private void DrawLevel1()
         {
             foreach(Block block in staticBlocks)
             {

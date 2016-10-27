@@ -26,6 +26,8 @@ namespace GraPlatformowa
         private int stairHeight = 15;
         private bool standing = false;
         private bool jumping = false;
+        Block actualBlock;
+        Block dis;
 
         //Konstruktor gracza(położenie X,Y, lista obiektów z którymi gracz koliduje, tekstura gracza:
         public Player(Vector2 newPosition, Texture2D newTexture)
@@ -46,7 +48,11 @@ namespace GraPlatformowa
             this.Move();
             this.Jump();
 
-            this.Collision();
+            actualBlock = this.Collision();
+            if (actualBlock != null && this.standing)
+                dis = actualBlock;
+            if(dis != null)
+                dis.Disappear();
             this.Restart();
         }
 

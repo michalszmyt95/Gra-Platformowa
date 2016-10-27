@@ -16,6 +16,9 @@ namespace GraPlatformowa
     {
         protected Texture2D texture = Game1.blueBlockTexture;
         protected Rectangle rect;
+        protected float alpha = 1;
+        protected float disappearSpeed = 0.5f;
+        public bool disappear;
 
         public Block(){}
 
@@ -29,27 +32,25 @@ namespace GraPlatformowa
             SceneManager.staticBlocks.Add(this);
         }
 
-        public Block(Rectangle newRect, Texture2D newTexture)
-        {
-            this.rect = newRect;
-            this.texture = newTexture;
-            SceneManager.staticBlocks.Add(this);
-        }
-
         public void Update(GameTime gameTime)
         {
+            if (this.disappear)
+                this.Disappear();
         }
 
         public void Draw(SpriteBatch spriteBatch) //Funkcja wywoływana w Draw gry.
         {
-            spriteBatch.Draw(this.texture, this.rect, Color.White);
+            spriteBatch.Draw(this.texture, this.rect, Color.White * this.alpha);
         }
 
 
         public void Disappear()
         {
-            SceneManager.staticBlocks.Remove(this);
-            this.rect.X = -1000;
+            if (this.alpha > 0)
+                this.alpha -= 0.1f * disappearSpeed;
+            else {
+                SceneManager.staticBlocks.Remove(this);
+            }
         }
 
 

@@ -21,6 +21,7 @@ namespace GraPlatformowa
         //Song bgMusic;
 
         Player player;
+    
 
         public Game1()
         {
@@ -57,9 +58,6 @@ namespace GraPlatformowa
             //MediaPlayer.Play(bgMusic);
             // Zapêtlanie muzyki
             MediaPlayer.IsRepeating = true;
-
-            
-
         }
 
         protected override void UnloadContent(){}
