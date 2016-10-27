@@ -91,19 +91,19 @@ namespace GraPlatformowa
             }
             
         }
-        private Rectangle? Collision()
+        private Block Collision()
         {
             //Jeśli funkcja collision.With() zwraca obiekt, znaczy ze gracz z danym obiektem aktualnie koliduje.
             //W przeciwnym wypadku, gdy funkcja zwraca null, znaczy, że gracz z niczym nie koliduje.
-            Rectangle? obj = collision.With(this.position, this.scale);
+            Block block = collision.With(this.position, this.scale);
             
-            if (obj != null)
+            if (block != null)
             {            /*  Przedzial wysokosci bloku, z ktorego gracz automatycznie zostanie podniesiony na góre bloku  -------VVVV   */
-                if ((this.position.Y + this.scale.Y) >= obj.Value.Y && (this.position.Y + this.scale.Y) <= obj.Value.Y + this.stairHeight && this.velocity.Y > 0)
+                if ((this.position.Y + this.scale.Y) >= block.getY() && (this.position.Y + this.scale.Y) <= block.getY() + this.stairHeight && this.velocity.Y >= 0)
                 {
                     if (!this.jumping)
                     {
-                        this.position.Y = obj.Value.Y - this.scale.Y;
+                        this.position.Y = block.getY() - this.scale.Y;
                         this.standing = true;
                     }
                     // Jeśli gracz skakał zamiast tylko spadać, to zależność wchodzenia po schodach nie powinna działać, dlatego by gracz sie utrzymał na bloku,
@@ -111,7 +111,7 @@ namespace GraPlatformowa
                     // (chodzi o to, by gracz co skoczył na zbyt wysoki blok nie został automatycznie wciągnięty na górę gdy nie pokonał całej drogi by stanąć na bloku)
                     else if (this.jumping && this.velocity.Y > 3.1 )
                     {
-                        this.position.Y = obj.Value.Y - this.scale.Y;
+                        this.position.Y = block.getY() - this.scale.Y;
                         this.standing = true;
                         this.jumping = false;
                     }
@@ -132,7 +132,7 @@ namespace GraPlatformowa
                 this.velocity.Y = 0;
             }
 
-            return obj;
+            return block;
         }
 
         //Tymczasowa funkcja u gracza, przydatna do testów:

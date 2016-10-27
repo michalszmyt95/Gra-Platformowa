@@ -8,14 +8,14 @@ namespace GraPlatformowa
     {
         //Sprawdzanie zajścia kolizji statycznego obiektu z listy SceneManagera z obiektem dynamicznym, np. graczem:
         //Musiałem użyć nullable (dodanie znaku zapytania), dla przypadku, gdy dynamiczny obiekt nie koliduje z niczym w liście:
-        public Rectangle? With(Vector2 dynamicObjPosition, Vector2 dynamicObjScale)
+        public Block With(Vector2 dynamicObjPosition, Vector2 dynamicObjScale)
         {
-            foreach (Rectangle obj in SceneManager.StaticObjects)
+            foreach (Block block in SceneManager.staticBlocks)
             {
-                if ((dynamicObjPosition.Y + dynamicObjScale.Y) > obj.Y && (dynamicObjPosition.X + dynamicObjScale.X) >= (obj.X)
-                    && dynamicObjPosition.X <= (obj.X + obj.Width) && dynamicObjPosition.Y < (obj.Y))
+                if ((dynamicObjPosition.Y + dynamicObjScale.Y) > block.getY() && (dynamicObjPosition.X + dynamicObjScale.X) >= (block.getX())
+                    && dynamicObjPosition.X <= (block.getX() + block.getWidth()) && dynamicObjPosition.Y < (block.getY()))
                 {
-                    return obj;
+                    return block;
                 }
             }
             return null;

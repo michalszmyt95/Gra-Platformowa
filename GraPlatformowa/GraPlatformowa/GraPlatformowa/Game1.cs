@@ -15,18 +15,12 @@ namespace GraPlatformowa
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SceneManager sceneManager;
 
-        Texture2D testBlock, playerTexture;
+        public static Texture2D blueBlockTexture, redBlockTexture, greenBlockTexture, playerTexture;
         //Song bgMusic;
 
         Player player;
-        Block block1;
-        Block block2;
-        Block block3;
-        Block block4;
-        Block block5;
-        Block block6;
-        Block block7;
 
         public Game1()
         {
@@ -41,15 +35,9 @@ namespace GraPlatformowa
         protected override void Initialize()
         {
             base.Initialize();
-
             player = new Player(new Vector2(800,10), playerTexture);
-            block1 = new Block(new Vector2(0, 200), testBlock);
-            block2 = new Block(new Vector2(200, 400), testBlock);
-            block3 = new Block(new Vector2(300, 385), testBlock);
-            block4 = new Block(new Vector2(400, 370), testBlock);
-            block5 = new Block(new Vector2(800, 400), testBlock);
-            block6 = new Block(new Vector2(720, 294), testBlock);
-            block7 = new Block(new Vector2(900, 275), testBlock);
+            sceneManager = new SceneManager(spriteBatch);
+            sceneManager.Initialize();
         }
 
 
@@ -60,13 +48,17 @@ namespace GraPlatformowa
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //£adowanie zasobów:
-            testBlock = Content.Load<Texture2D>("blue2");
             playerTexture = Content.Load<Texture2D>("pl1");
+            blueBlockTexture = Content.Load<Texture2D>("blue2");
+            redBlockTexture = Content.Load<Texture2D>("red2");
+            greenBlockTexture = Content.Load<Texture2D>("green2");
             //bgMusic = Content.Load<Song>("bgMusic1");
             // Odtwarzanie muzyki przy starcie aplikacji
             //MediaPlayer.Play(bgMusic);
             // Zapêtlanie muzyki
             MediaPlayer.IsRepeating = true;
+
+            
 
         }
 
@@ -77,7 +69,6 @@ namespace GraPlatformowa
         protected override void Update(GameTime gameTime)
         {
             player.Update(gameTime);
-            block4.Update(gameTime);
             // animacja bazuj¹ca na czasie
             base.Update(gameTime);
         }
@@ -91,13 +82,7 @@ namespace GraPlatformowa
             // Rozpoczynanie rysowania:
             spriteBatch.Begin();
             // Rysowanie bloków:
-            block1.Draw(spriteBatch);
-            block2.Draw(spriteBatch);
-            block3.Draw(spriteBatch);
-            block4.Draw(spriteBatch);
-            block5.Draw(spriteBatch);
-            block6.Draw(spriteBatch);
-            block7.Draw(spriteBatch);
+            sceneManager.Draw();
             // Rysowanie gracza:
             player.Draw(spriteBatch);
             // Zamykanie rysowania:

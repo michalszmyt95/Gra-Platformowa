@@ -14,9 +14,11 @@ namespace GraPlatformowa
 {
     class Block : GameObject
     {
-        //public delegate void wsk(Block block);
-        Texture2D texture;
-        Rectangle rect;
+        protected Texture2D texture = Game1.blueBlockTexture;
+        protected Rectangle rect;
+
+        public Block(){}
+
         public Block(Vector2 newPosition, Texture2D newTexture)
         {
             this.rect.X = (int)newPosition.X;
@@ -24,15 +26,17 @@ namespace GraPlatformowa
             this.rect.Width = (int)this.scale.X;
             this.rect.Height = (int)this.scale.Y;
             this.texture = newTexture;
-            SceneManager.StaticObjects.Add(this.rect);
+            SceneManager.staticBlocks.Add(this);
         }
+
         public Block(Rectangle newRect, Texture2D newTexture)
         {
             this.rect = newRect;
             this.texture = newTexture;
-            SceneManager.StaticObjects.Add(this.rect);
+            SceneManager.staticBlocks.Add(this);
         }
-        public void Update(GameTime gametimes)
+
+        public void Update(GameTime gameTime)
         {
         }
 
@@ -40,10 +44,30 @@ namespace GraPlatformowa
         {
             spriteBatch.Draw(this.texture, this.rect, Color.White);
         }
+
         public void Disappear()
         {
-            SceneManager.StaticObjects.Remove(this.rect);
+            SceneManager.staticBlocks.Remove(this);
             this.rect.X = -1000;
         }
+
+        public float getX()
+        {
+            return this.position.X;
+        }
+        public float getY()
+        {
+            return this.position.Y;
+        }
+        public int getWidth()
+        {
+            return this.rect.Width;
+        }
+        public int getHeight()
+        {
+            return this.rect.Height;
+        }
+
+
     }
 }

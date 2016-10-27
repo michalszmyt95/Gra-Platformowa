@@ -14,8 +14,44 @@ namespace GraPlatformowa
 {
     class SceneManager
     {
-        //Ogólnodostępna lista wszystkich obiektów statycznych w grze:
-        public static List<Rectangle> StaticObjects = new List<Rectangle>();
-        // Trzeba bedzie chyba jednak do tej listy obiektów dodawać chyba bloki zamiast same rectangle...
+        SpriteBatch spriteBatch;
+
+        public static List<Block> staticBlocks = new List<Block>();
+       
+        public SceneManager(SpriteBatch newSpriteBatch)
+        {
+            this.spriteBatch = newSpriteBatch;
+        }
+
+        public void Initialize()
+        {
+            this.level1();
+        }
+
+        public void Draw()
+        {
+            drawLevel1();
+        }
+
+        private void level1()
+        {
+            staticBlocks.Add(new BlueBlock(new Vector2(0, 200)));
+            staticBlocks.Add(new BlueBlock(new Vector2(200, 400)));
+            staticBlocks.Add(new BlueBlock(new Vector2(300, 385)));
+            staticBlocks.Add(new BlueBlock(new Vector2(400, 370)));
+            staticBlocks.Add(new BlueBlock(new Vector2(800, 400)));
+            staticBlocks.Add(new BlueBlock(new Vector2(720, 295)));
+            staticBlocks.Add(new BlueBlock(new Vector2(930, 275)));
+        }
+
+        private void drawLevel1()
+        {
+            foreach(Block obj in staticBlocks)
+            {
+                    obj.Draw(spriteBatch);
+            }
+        }
+
+
     }
 }
