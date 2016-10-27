@@ -35,7 +35,8 @@ namespace GraPlatformowa
             //this.scale.X = newTexture.Width;
             //this.scale.Y = newTexture.Height;
             this.collision = new CollisionDetector();
-            this.rect = new Rectangle(0,0, (int) this.scale.X, (int)this.scale.Y);
+            this.rect = new Rectangle(0,0, (int) this.texture.Width, (int)this.texture.Height);
+            this.scale = new Vector2(this.texture.Width, this.texture.Height);
         }
 
         public void Update(GameTime gameTime) // Funkcja wywoływana w Update gry.

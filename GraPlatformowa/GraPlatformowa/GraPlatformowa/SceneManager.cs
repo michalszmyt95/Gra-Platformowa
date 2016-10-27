@@ -35,20 +35,20 @@ namespace GraPlatformowa
 
         private void level1()
         {
-            staticBlocks.Add(new BlueBlock(new Vector2(0, 200)));
-            staticBlocks.Add(new BlueBlock(new Vector2(200, 400)));
-            staticBlocks.Add(new BlueBlock(new Vector2(300, 385)));
-            staticBlocks.Add(new BlueBlock(new Vector2(400, 370)));
-            staticBlocks.Add(new BlueBlock(new Vector2(800, 400)));
-            staticBlocks.Add(new BlueBlock(new Vector2(720, 295)));
-            staticBlocks.Add(new BlueBlock(new Vector2(930, 275)));
+            new BlueBlock(new Vector2(0, 200));
+            new BlueBlock(new Vector2(200, 400));
+            new BlueBlock(new Vector2(300, 385));
+            new GreenBlock(new Vector2(400, 370));
+            new BlueBlock(new Vector2(800, 400));
+            new BlueBlock(new Vector2(720, 295));
+            new RedBlock(new Vector2(930, 275));
         }
 
         private void drawLevel1()
         {
-            foreach(Block obj in staticBlocks)
+            foreach(Block block in staticBlocks)
             {
-                    obj.Draw(spriteBatch);
+                    block.Draw(spriteBatch);
             }
         }
 

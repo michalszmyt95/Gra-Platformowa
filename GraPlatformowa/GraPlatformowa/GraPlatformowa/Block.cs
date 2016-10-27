@@ -45,12 +45,15 @@ namespace GraPlatformowa
             spriteBatch.Draw(this.texture, this.rect, Color.White);
         }
 
+
         public void Disappear()
         {
             SceneManager.staticBlocks.Remove(this);
             this.rect.X = -1000;
         }
 
+
+        //Funkcje zwracające parametry pozycji i skali każdego bloku:
         public float getX()
         {
             return this.position.X;
