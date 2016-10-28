@@ -26,7 +26,7 @@ namespace GraPlatformowa
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 1440;
             graphics.PreferredBackBufferHeight = 720;
             Content.RootDirectory = "Content"; // Katalog, w którym znajduj¹ siê zasoby gry.
@@ -40,8 +40,11 @@ namespace GraPlatformowa
             sceneManager = new SceneManager(spriteBatch);
             sceneManager.Initialize();
 
-            foreach (Block block in SceneManager.staticBlocks)
+            // Delegaty
+            foreach (Block block in SceneManager.staticBlocks) {
                 player.PlayerGetOnBlock += block.OnPlayerGetOnBlock;
+                player.PlayerEscapedFromBlock += block.OnPlayerEscapedFromBlock;
+            }
 
         }
 
@@ -87,7 +90,7 @@ namespace GraPlatformowa
             spriteBatch.Begin();
             // Rysowanie bloków:
             sceneManager.Draw();
-            for (int i = 0; i< SceneManager.staticBlocks.Count(); i++)
+            for (int i = 0; i < SceneManager.staticBlocks.Count(); i++)
                 SceneManager.staticBlocks[i].Update();
             // Rysowanie gracza:
             player.Draw(spriteBatch);

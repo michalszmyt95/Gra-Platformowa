@@ -33,8 +33,7 @@ namespace GraPlatformowa
         public delegate void PlayerGetOnBlockEventHandler(object source, EventArgs args);
         public event PlayerGetOnBlockEventHandler PlayerGetOnBlock;
 
-        Block actualBlock; // Blok z którym aktualnie koliduje gracz.
-        List<Block> disappearList = new List<Block>(); // Lista bloków gotowych do zniknięcia.
+        private Block lastBlockColided; // Blok z którym gracz poprzednio kolidował.
 
         public Player(Vector2 newPosition, Texture2D newTexture)
         {
@@ -99,14 +98,20 @@ namespace GraPlatformowa
         }
         private Block Collision()
         {
+            
             //Jeśli funkcja collision.With() zwraca obiekt, znaczy ze gracz z danym obiektem aktualnie koliduje.
             //W przeciwnym wypadku, gdy funkcja zwraca null, znaczy, że gracz z niczym nie koliduje.
             Block block = collision.With(this.position, this.scale);
-            
+
             if (block != null)
             {            /*  Przedzial wysokosci bloku, z ktorego gracz automatycznie zostanie podniesiony na góre bloku  -------VVVV   */
                 if ((this.position.Y + this.scale.Y) >= block.getY() && (this.position.Y + this.scale.Y) <= block.getY() + this.stairHeight && this.velocity.Y >= 0)
                 {
+                    // Kod sprawdzający czy gracz zmienił blok z którym kolidował poprzednio wiedząc, że poprzedni nie był null:
+                    if (this.lastBlockColided != block)
+                        PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty);
+                    this.lastBlockColided = block;
+
                     if (!this.jumping)
                     {
                         this.position.Y = block.getY() - this.scale.Y;
@@ -130,32 +135,19 @@ namespace GraPlatformowa
             }
             else
             {
+                //Gdy poprzedni blok z którym gracz kolidował był null:
                 this.standing = false;
+                PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty);
             }
 
             if (this.standing)
             {
                 this.velocity.Y = 0;
-                
-                if(PlayerGetOnBlock != null)
-                    PlayerGetOnBlock(block,EventArgs.Empty);
+                PlayerGetOnBlock(block,EventArgs.Empty);
             }
 
             return block;
         }
-
-        /*
-        private void BlockDisappearingAfterCollision()
-        {
-            actualBlock = this.Collision();
-            if (actualBlock != null && this.standing)
-                disappearList.Add(actualBlock);
-            if (disappearList != null)
-                foreach (Block block in disappearList)
-                    if (this.collision.With(this.position, this.scale) != block)
-                        block.Disappear();
-        }
-        */
 
         //Tymczasowa funkcja u gracza, przydatna do testów:
         private void Restart()

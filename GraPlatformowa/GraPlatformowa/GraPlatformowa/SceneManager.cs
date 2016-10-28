@@ -40,10 +40,10 @@ namespace GraPlatformowa
             new BlueBlock(new Vector2(260, 400));
             new BlueBlock(new Vector2(320, 385));
             new BlueBlock(new Vector2(380, 385));
-            new GreenBlock(new Vector2(460, 370));
+            new RedBlock(new Vector2(460, 370));
             new BlueBlock(new Vector2(800, 400));
             new BlueBlock(new Vector2(720, 295));
-            new RedBlock(new Vector2(930, 275));
+            new GreenBlock(new Vector2(930, 275));
         }
 
         public void Update()
