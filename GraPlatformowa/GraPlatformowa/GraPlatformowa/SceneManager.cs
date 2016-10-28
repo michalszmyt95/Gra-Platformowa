@@ -40,14 +40,19 @@ namespace GraPlatformowa
             new BlueBlock(new Vector2(260, 400));
             new BlueBlock(new Vector2(320, 385));
             new BlueBlock(new Vector2(380, 385));
-            new RedBlock(new Vector2(460, 370));
+            new RedBlock(new Vector2(450, 375));
             new BlueBlock(new Vector2(800, 400));
             new BlueBlock(new Vector2(720, 295));
             new GreenBlock(new Vector2(930, 275));
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
+            if (staticBlocks.Count() == 0)
+            {
+                level1();
+            }
+
         }
 
         private void DrawLevel1()

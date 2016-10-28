@@ -18,7 +18,7 @@ namespace GraPlatformowa
         SceneManager sceneManager;
 
         public static Texture2D blueBlockTexture, redBlockTexture, greenBlockTexture, playerTexture;
-        //Song bgMusic;
+        Song bgMusic;
 
         Player player;
     
@@ -26,7 +26,7 @@ namespace GraPlatformowa
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 1440;
             graphics.PreferredBackBufferHeight = 720;
             Content.RootDirectory = "Content"; // Katalog, w którym znajduj¹ siê zasoby gry.
@@ -36,12 +36,12 @@ namespace GraPlatformowa
         protected override void Initialize()
         {
             base.Initialize();
-            player = new Player(new Vector2(800,10), playerTexture);
+            player = new Player(new Vector2(10,10), playerTexture);
             sceneManager = new SceneManager(spriteBatch);
             sceneManager.Initialize();
-
             // Delegaty
-            foreach (Block block in SceneManager.staticBlocks) {
+            foreach (Block block in SceneManager.staticBlocks)
+            {
                 player.PlayerGetOnBlock += block.OnPlayerGetOnBlock;
                 player.PlayerEscapedFromBlock += block.OnPlayerEscapedFromBlock;
             }
@@ -60,9 +60,9 @@ namespace GraPlatformowa
             blueBlockTexture = Content.Load<Texture2D>("blue2");
             redBlockTexture = Content.Load<Texture2D>("red2");
             greenBlockTexture = Content.Load<Texture2D>("green2");
-            //bgMusic = Content.Load<Song>("bgMusic1");
+            bgMusic = Content.Load<Song>("bgMusic1");
             // Odtwarzanie muzyki przy starcie aplikacji
-            //MediaPlayer.Play(bgMusic);
+            MediaPlayer.Play(bgMusic);
             // Zapêtlanie muzyki
             MediaPlayer.IsRepeating = true;
         }
@@ -74,6 +74,15 @@ namespace GraPlatformowa
         protected override void Update(GameTime gameTime)
         {
             player.Update(gameTime);
+            sceneManager.Update(gameTime);
+
+            // Delegaty
+            foreach (Block block in SceneManager.staticBlocks)
+            {
+                player.PlayerGetOnBlock += block.OnPlayerGetOnBlock;
+                player.PlayerEscapedFromBlock += block.OnPlayerEscapedFromBlock;
+            }
+
             // animacja bazuj¹ca na czasie
             base.Update(gameTime);
 
@@ -91,7 +100,9 @@ namespace GraPlatformowa
             // Rysowanie bloków:
             sceneManager.Draw();
             for (int i = 0; i < SceneManager.staticBlocks.Count(); i++)
+            {
                 SceneManager.staticBlocks[i].Update();
+            }
             // Rysowanie gracza:
             player.Draw(spriteBatch);
             // Zamykanie rysowania:

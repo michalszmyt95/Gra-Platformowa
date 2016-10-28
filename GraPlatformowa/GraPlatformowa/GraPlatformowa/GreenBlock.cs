@@ -21,8 +21,6 @@ namespace GraPlatformowa
             this.disappearSpeed = 1f;
             SceneManager.staticBlocks.Add(this);
         }
-        public override void OnPlayerGetOnBlock(object source, EventArgs e)
-        {
-        }
+        public override void OnPlayerGetOnBlock(object source, EventArgs e){}
     }
 }
