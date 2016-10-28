@@ -18,7 +18,11 @@ namespace GraPlatformowa
             this.rect.Y = (int)newPosition.Y;
             this.rect.Width = (int)this.scale.X;
             this.rect.Height = (int)this.scale.Y;
+            this.disappearSpeed = 0.1f;
             SceneManager.staticBlocks.Add(this);
+        }
+        public override void OnPlayerGetOnBlock(object source, EventArgs e)
+        {
         }
     }
 }

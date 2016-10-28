@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraPlatformowa", "GraPlatformowa\GraPlatformowa\GraPlatformowa.csproj", "{1DA80E57-E05F-4686-BDC6-CF34FBDA6402}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraPlatformowaContent", "GraPlatformowa\GraPlatformowaContent\GraPlatformowaContent.contentproj", "{C90D0188-7893-45A8-855A-767221DD1E2E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1DA80E57-E05F-4686-BDC6-CF34FBDA6402}.Debug|x86.ActiveCfg = Debug|x86
+		{1DA80E57-E05F-4686-BDC6-CF34FBDA6402}.Debug|x86.Build.0 = Debug|x86
+		{1DA80E57-E05F-4686-BDC6-CF34FBDA6402}.Release|x86.ActiveCfg = Release|x86
+		{1DA80E57-E05F-4686-BDC6-CF34FBDA6402}.Release|x86.Build.0 = Release|x86
+		{C90D0188-7893-45A8-855A-767221DD1E2E}.Debug|x86.ActiveCfg = Debug|x86
+		{C90D0188-7893-45A8-855A-767221DD1E2E}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

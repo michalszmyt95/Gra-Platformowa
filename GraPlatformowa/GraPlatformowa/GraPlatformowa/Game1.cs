@@ -39,6 +39,10 @@ namespace GraPlatformowa
             player = new Player(new Vector2(800,10), playerTexture);
             sceneManager = new SceneManager(spriteBatch);
             sceneManager.Initialize();
+
+            foreach (Block block in SceneManager.staticBlocks)
+                player.PlayerGetOnBlock += block.OnPlayerGetOnBlock;
+
         }
 
 
@@ -69,6 +73,8 @@ namespace GraPlatformowa
             player.Update(gameTime);
             // animacja bazuj¹ca na czasie
             base.Update(gameTime);
+
+
         }
 
         /// Metoda wywo³ywana tak czêsto jak to mo¿liwe, po metodzie Update(),
@@ -81,6 +87,8 @@ namespace GraPlatformowa
             spriteBatch.Begin();
             // Rysowanie bloków:
             sceneManager.Draw();
+            for (int i = 0; i< SceneManager.staticBlocks.Count(); i++)
+                SceneManager.staticBlocks[i].Update();
             // Rysowanie gracza:
             player.Draw(spriteBatch);
             // Zamykanie rysowania:

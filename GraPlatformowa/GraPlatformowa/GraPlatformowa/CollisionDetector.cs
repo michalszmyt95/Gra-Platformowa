@@ -12,8 +12,8 @@ namespace GraPlatformowa
         {
             foreach (Block block in SceneManager.staticBlocks)
             {
-                if ((dynamicObjPosition.Y + dynamicObjScale.Y) > block.getY() && (dynamicObjPosition.X + dynamicObjScale.X) >= (block.getX())
-                    && dynamicObjPosition.X <= (block.getX() + block.getWidth()) && dynamicObjPosition.Y < (block.getY()))
+                if ((dynamicObjPosition.Y + dynamicObjScale.Y) >= block.getY() && (dynamicObjPosition.X + dynamicObjScale.X) >= (block.getX())
+                    && dynamicObjPosition.X <= (block.getX() + block.getWidth()) && dynamicObjPosition.Y <= (block.getY()))
                 {
                     return block;
                 }

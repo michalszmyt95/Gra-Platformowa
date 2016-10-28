@@ -26,16 +26,20 @@ namespace GraPlatformowa
         private int stairHeight = 15;
         private bool standing = false;
         private bool jumping = false;
-        Block actualBlock;
-        Block dis;
 
-        //Konstruktor gracza(położenie X,Y, lista obiektów z którymi gracz koliduje, tekstura gracza:
+        public delegate void PlayerEscapedFromBlockEventHandler(object source, EventArgs args);
+        public event PlayerEscapedFromBlockEventHandler PlayerEscapedFromBlock;
+
+        public delegate void PlayerGetOnBlockEventHandler(object source, EventArgs args);
+        public event PlayerGetOnBlockEventHandler PlayerGetOnBlock;
+
+        Block actualBlock; // Blok z którym aktualnie koliduje gracz.
+        List<Block> disappearList = new List<Block>(); // Lista bloków gotowych do zniknięcia.
+
         public Player(Vector2 newPosition, Texture2D newTexture)
         {
             this.texture = newTexture;
             this.position = newPosition;
-            //this.scale.X = newTexture.Width;
-            //this.scale.Y = newTexture.Height;
             this.collision = new CollisionDetector();
             this.rect = new Rectangle(0,0, (int) this.texture.Width, (int)this.texture.Height);
             this.scale = new Vector2(this.texture.Width, this.texture.Height);
@@ -47,12 +51,7 @@ namespace GraPlatformowa
             this.UpdateKeyboardState();
             this.Move();
             this.Jump();
-
-            actualBlock = this.Collision();
-            if (actualBlock != null && this.standing)
-                dis = actualBlock;
-            if(dis != null)
-                dis.Disappear();
+            this.Collision();
             this.Restart();
         }
 
@@ -137,10 +136,26 @@ namespace GraPlatformowa
             if (this.standing)
             {
                 this.velocity.Y = 0;
+                
+                if(PlayerGetOnBlock != null)
+                    PlayerGetOnBlock(block,EventArgs.Empty);
             }
 
             return block;
         }
+
+        /*
+        private void BlockDisappearingAfterCollision()
+        {
+            actualBlock = this.Collision();
+            if (actualBlock != null && this.standing)
+                disappearList.Add(actualBlock);
+            if (disappearList != null)
+                foreach (Block block in disappearList)
+                    if (this.collision.With(this.position, this.scale) != block)
+                        block.Disappear();
+        }
+        */
 
         //Tymczasowa funkcja u gracza, przydatna do testów:
         private void Restart()

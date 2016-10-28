@@ -14,11 +14,24 @@ namespace GraPlatformowa
 {
     class Block : GameObject
     {
+
+        public virtual void OnPlayerGetOnBlock(object source, EventArgs e)
+        {
+            if (source == this)
+                this.disappearing = true;
+        }
+
+        public virtual void OnPlayerEscapedFromBlock(object source, EventArgs e)
+        {
+            if (source == this)
+                this.disappearing = true;
+        }
+
         protected Texture2D texture = Game1.blueBlockTexture;
         protected Rectangle rect;
         protected float alpha = 1;
-        protected float disappearSpeed = 0.5f;
-        public bool disappear;
+        protected float disappearSpeed = 1;
+        protected bool disappearing = false;
 
         public Block(){}
 
@@ -32,10 +45,10 @@ namespace GraPlatformowa
             SceneManager.staticBlocks.Add(this);
         }
 
-        public void Update(GameTime gameTime)
+        public void Update()
         {
-            if (this.disappear)
-                this.Disappear();
+            if (this.disappearing)
+                Disappear();
         }
 
         public void Draw(SpriteBatch spriteBatch) //Funkcja wywoływana w Draw gry.
@@ -43,11 +56,10 @@ namespace GraPlatformowa
             spriteBatch.Draw(this.texture, this.rect, Color.White * this.alpha);
         }
 
-
         public void Disappear()
         {
             if (this.alpha > 0)
-                this.alpha -= 0.1f * disappearSpeed;
+                this.alpha -= 0.005f * disappearSpeed;
             else {
                 SceneManager.staticBlocks.Remove(this);
             }
