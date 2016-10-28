@@ -51,7 +51,6 @@ namespace GraPlatformowa
             this.Move();
             this.Jump();
             this.Collision();
-            this.Restart();
         }
 
         public void Draw(SpriteBatch spriteBatch) //Funkcja wywoływana w Draw gry.
@@ -148,16 +147,12 @@ namespace GraPlatformowa
 
             return block;
         }
-
-        //Tymczasowa funkcja u gracza, przydatna do testów:
-        private void Restart()
+        public void Restart()
         {
-            if (this.position.Y >= 1000)
-            {
-                this.velocity = new Vector2(0, 0);
-                this.position.Y = 10;
-                this.position.X = 10;
-            }
+            this.position.X = 10;
+            this.position.Y = 10;
+            this.velocity.Y = 0;
         }
+
     }
 }
