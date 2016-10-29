@@ -18,13 +18,10 @@ namespace GraPlatformowa
         private float blockLeft;
         private float blockRight;
 
-        
-
         public CollisionDetector(Player newPlayer)
         {
             this.player = newPlayer;
         }
-
 
         //Sprawdzanie zajścia kolizji statycznego obiektu z listy SceneManagera z obiektem dynamicznym, np. graczem:
         //Musiałem użyć nullable (dodanie znaku zapytania), dla przypadku, gdy dynamiczny obiekt nie koliduje z niczym w liście:
@@ -36,12 +33,11 @@ namespace GraPlatformowa
 
             foreach (Block block in SceneManager.staticBlocks)
             {
-                blockHead = block.GetPosition().Y;
-                blockLeft = block.GetPosition().X;
+                blockHead = block.GetPosition().Y; blockLeft = block.GetPosition().X;
                 blockFeet = block.GetPosition().Y + block.GetScale().Y;
                 blockRight = block.GetPosition().X + block.GetScale().X;
 
-                if (playerFeet >= blockHead && playerFeet <= blockFeet && playerRight >= blockLeft && playerLeft <= blockRight)
+                if (playerFeet >= blockHead && playerHead <= blockFeet && playerRight >= blockLeft && playerLeft <= blockRight)
                 {
                     return block;
                 }
@@ -49,7 +45,7 @@ namespace GraPlatformowa
             return null;
         }
 
-        public Block On()
+        public Block On() // Zwraca blok z którym gracz aktualnie część wspólną.
         {
             playerHead = player.GetPosition().Y; playerLeft = player.GetPosition().X;
             playerFeet = player.GetPosition().Y + player.GetScale().Y;
@@ -61,12 +57,15 @@ namespace GraPlatformowa
                 blockFeet = block.GetPosition().Y + block.GetScale().Y;
                 blockRight = block.GetPosition().X + block.GetScale().X;
 
-                if (playerFeet >= blockHead && playerRight >= blockLeft && playerLeft <= blockRight && playerHead <= blockFeet)
-                {
+                if(playerRight >= blockLeft && playerLeft <= blockRight && playerFeet >= blockHead && playerFeet <= blockFeet)
                     return block;
-                }
             }
             return null;
+        }
+
+        public bool IcyTowerLike() // Zwraca informacje o tym czy gracz stoi.
+        {
+            return false;
         }
 
 

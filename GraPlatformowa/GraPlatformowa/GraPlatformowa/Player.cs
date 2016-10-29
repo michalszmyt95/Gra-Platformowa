@@ -17,15 +17,14 @@ namespace GraPlatformowa
         Texture2D texture;
         KeyboardState kbState;
         CollisionDetector collision;
+        Vector2 lastPosition = new Vector2();
 
         private float speed = 6.5f;
         private float gravity = 2.5f;
         private float jumpSpeed = 9.5f;
         private Vector2 velocity = new Vector2();
         private Rectangle rect;
-        private int stairHeight = 15;
         private bool standing = false;
-        private bool jumping = false;
 
         public delegate void PlayerEscapedFromBlockEventHandler(object source, EventArgs args);
         public event PlayerEscapedFromBlockEventHandler PlayerEscapedFromBlock;
@@ -46,10 +45,12 @@ namespace GraPlatformowa
 
         public void Update(GameTime gameTime) // Funkcja wywoływana w Update gry.
         {
+            this.lastPosition = this.position;
             this.position += this.velocity;
             this.UpdateKeyboardState();
             this.Move();
             this.Jump();
+            this.Gravity();
             this.Collision();
         }
 
@@ -66,84 +67,56 @@ namespace GraPlatformowa
         //Funkcje determinujące ruch:
         private void Move()
         {
-            if ((kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.Left)))
-            {
-                    this.velocity.X = -this.speed;
-            }
-            else if ((kbState.IsKeyDown(Keys.D) || kbState.IsKeyDown(Keys.Right)))
-            {
-                    this.velocity.X = this.speed;
-            }
-            else
-                this.velocity.X = 0;
+            if ((kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.Left))) this.velocity.X = -this.speed;
+            else if ((kbState.IsKeyDown(Keys.D) || kbState.IsKeyDown(Keys.Right))) this.velocity.X = this.speed;
+            else this.velocity.X = 0;
         }
         private void Jump()
         {
             if ((kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.Space) || kbState.IsKeyDown(Keys.Up)) && this.standing)
-            {
-                    this.velocity.Y = -jumpSpeed;
-                    this.standing = false;
-                    this.jumping = true;
-            }
-            
-            if(!this.standing)
-            {
-                velocity.Y += 0.15f * gravity; // <------ Grawitacja
-            }
-            
+                this.velocity.Y = -jumpSpeed;
         }
-
-        private Block Collision()
+        private void Gravity()
         {
-
+            if (!this.standing) velocity.Y += 0.15f * gravity;
+        }
+        private void Collision()
+        {
             //Jeśli funkcja collision.In() zwraca obiekt, znaczy ze pozycja i skala gracza ma część wspólną z danym obiektem.
             //W przeciwnym wypadku, gdy funkcja zwraca null, znaczy, że gracz z niczym aktualnie nie koliduje.
             Block block = collision.In();
 
             if (block != null)
-            {            /*  Przedzial wysokosci bloku, z ktorego gracz automatycznie zostanie podniesiony na góre bloku  -------VVVV   */
-                if ((this.position.Y + this.scale.Y) >= block.GetPosition().Y && (this.position.Y + this.scale.Y) <= block.GetPosition().Y + this.stairHeight && this.velocity.Y >= 0)
-                {
-                    // Kod sprawdzający czy gracz zmienił blok z którym kolidował poprzednio wiedząc, że poprzedni nie był null:
-                    if (this.lastBlockColided != block)
-                        PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty);
-                    this.lastBlockColided = block;
-
-                    if (!this.jumping)
-                    {
-                        this.position.Y = block.GetPosition().Y - this.scale.Y;
-                        this.standing = true;
-                    }
-                    // Jeśli gracz skakał zamiast tylko spadać, to zależność wchodzenia po schodach nie powinna działać, dlatego by gracz sie utrzymał na bloku,
-                    // Musi mieć dość dużą wartość spadania velocity.Y
-                    // (chodzi o to, by gracz co skoczył na zbyt wysoki blok nie został automatycznie wciągnięty na górę gdy nie pokonał całej drogi by stanąć na bloku)
-                    else if (this.jumping && this.velocity.Y >= 3.1f)
-                    {
-                        this.position.Y = block.GetPosition().Y - this.scale.Y;
-                        this.standing = true;
-                        this.jumping = false;
-                    }
-                }
-                else
-                {
-                    this.standing = false; //<-- Ta linijka kodu poprawia błąd związany z utrzymywaniem
-                    // stałej pozycji gracza po wejściu na kolejny blok, jeśli między zmianą bloku nie przerwała się kolizja.
-                }
-            }
-            else
             {
-                //Gdy poprzedni blok z którym gracz kolidował był null:
-                this.standing = false;
+                if (this.lastPosition.Y == this.position.Y ) //<-- Ten blok kodu odpowiada za możliwość chodzenia po schodkach.
+                {
+                    this.position.Y = block.GetPosition().Y - this.scale.Y;
+                    this.standing = true;
+                }
+                if (this.velocity.Y >= 0 && this.lastPosition.Y + this.scale.Y <= block.GetPosition().Y) //<-- Ten blok kodu odpowiada za warunek stania na bloku gdy gracz był w ruchu Y.
+                {
+                    this.position.Y = block.GetPosition().Y - this.scale.Y;
+                    this.standing = true;
+                }
+                else this.standing = false; //<-- Ta linijka kodu jest potrzebna, by gracz mógł skakać stojąc na bloku.
+            }
+            else //Gdy blok z którym gracz koliduje to null, czyli gracz z niczym nie koliduje:
+            {
+                this.standing = false; 
                 PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty);
             }
-
             if (this.standing)
             {
                 this.velocity.Y = 0;
+                
+               //Emitowanie Eventu, że gracz właśnie wszedł na bok.
                 PlayerGetOnBlock(block, EventArgs.Empty);
-            }
 
-            return block;
+               //Emitowanie Eventu, że gracz właśnie wyszedł z bloku (dla warunku, że wciąż stoi na JAKIMŚ bloku - innym niż poprzednio)
+                if (this.lastBlockColided != block)
+                    PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty);
+                this.lastBlockColided = block;
+            }
         }
 
         public void Restart()

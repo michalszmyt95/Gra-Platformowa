@@ -15,7 +15,7 @@ namespace GraPlatformowa
     class GameObject
     {
         protected Vector2 position = new Vector2(100, 100);
-        protected Vector2 scale = new Vector2(50, 50);
+        protected Vector2 scale = new Vector2(50, 25);
         public Vector2 GetPosition()
         {
             return this.position;
