@@ -16,5 +16,13 @@ namespace GraPlatformowa
     {
         protected Vector2 position = new Vector2(100, 100);
         protected Vector2 scale = new Vector2(50, 50);
+        public Vector2 GetPosition()
+        {
+            return this.position;
+        }
+        public Vector2 GetScale()
+        {
+            return this.scale;
+        }
     }
 }

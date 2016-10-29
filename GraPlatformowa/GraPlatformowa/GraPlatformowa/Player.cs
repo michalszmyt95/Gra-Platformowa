@@ -39,7 +39,7 @@ namespace GraPlatformowa
         {
             this.texture = newTexture;
             this.position = newPosition;
-            this.collision = new CollisionDetector();
+            this.collision = new CollisionDetector(this);
             this.rect = new Rectangle(0,0, (int) this.texture.Width, (int)this.texture.Height);
             this.scale = new Vector2(this.texture.Width, this.texture.Height);
         }
@@ -57,9 +57,6 @@ namespace GraPlatformowa
         {
             spriteBatch.Draw(this.texture, this.position, this.rect, Color.White);
         }
-
-
-        public Vector2 GetPosition() { return this.position; }
 
         public void UpdateKeyboardState()
         {
@@ -98,9 +95,9 @@ namespace GraPlatformowa
         private Block Collision()
         {
             
-            //Jeśli funkcja collision.With() zwraca obiekt, znaczy ze gracz z danym obiektem aktualnie koliduje.
-            //W przeciwnym wypadku, gdy funkcja zwraca null, znaczy, że gracz z niczym nie koliduje.
-            Block block = collision.With(this.position, this.scale);
+            //Jeśli funkcja collision.In() zwraca obiekt, znaczy ze pozycja i skala gracza ma część wspólną z danym obiektem.
+            //W przeciwnym wypadku, gdy funkcja zwraca null, znaczy, że gracz z niczym aktualnie nie koliduje.
+            Block block = collision.In();
 
             if (block != null)
             {            /*  Przedzial wysokosci bloku, z ktorego gracz automatycznie zostanie podniesiony na góre bloku  -------VVVV   */
@@ -119,7 +116,7 @@ namespace GraPlatformowa
                     // Jeśli gracz skakał zamiast tylko spadać, to zależność wchodzenia po schodach nie powinna działać, dlatego by gracz sie utrzymał na bloku,
                     // Musi mieć dość dużą wartość spadania velocity.Y
                     // (chodzi o to, by gracz co skoczył na zbyt wysoki blok nie został automatycznie wciągnięty na górę gdy nie pokonał całej drogi by stanąć na bloku)
-                    else if (this.jumping && this.velocity.Y > 3.1 )
+                    else if (this.jumping && this.velocity.Y >= 3.1f)
                     {
                         this.position.Y = block.getY() - this.scale.Y;
                         this.standing = true;

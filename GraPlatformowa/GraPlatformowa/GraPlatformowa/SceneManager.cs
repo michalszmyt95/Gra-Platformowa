@@ -20,14 +20,14 @@ namespace GraPlatformowa
 
         public void Initialize()
         {
-            this.Level1();
+            this.Level5();
             Delegaty();
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            player.Draw(spriteBatch);
             DrawLevels(spriteBatch);
+            player.Draw(spriteBatch);
         }
 
         public void Update(GameTime gameTime)
@@ -43,6 +43,7 @@ namespace GraPlatformowa
                     case 3: this.Level3(); player.Restart(); break;
                     case 4: this.Level4(); player.Restart(); break;
                     case 5: this.Level5(); player.Restart(); break;
+                    default: this.Level5(); player.Restart(); break;
                 }
             }
             Restart();
@@ -90,7 +91,11 @@ namespace GraPlatformowa
                 new BlueBlock(new Vector2(i, 180));
 
             for (int i = 1200; i >= 10; i -= 150)
-                    new BlueBlock(new Vector2(i, 600-i/4));
+            {
+                if(i>250) new BlueBlock(new Vector2(i, 600 - i / 4));
+                else new RedBlock(new Vector2(i, 600 - i / 4));
+
+            }
 
         }
         private void Level2()
@@ -138,12 +143,16 @@ namespace GraPlatformowa
             new BlueBlock(new Vector2(10, 100));
             new BlueBlock(new Vector2(80, 100));
             new BlueBlock(new Vector2(150, 100));
-            new GreenBlock(new Vector2(580, 200));
-            new BlueBlock(new Vector2(900, 100));
-            new BlueBlock(new Vector2(1050, 180));
-            new RedBlock(new Vector2(100, 500));
-            new RedBlock(new Vector2(200, 500));
-            new RedBlock(new Vector2(300, 500));
+            new BlueBlock(new Vector2(220, 100));
+            new BlueBlock(new Vector2(290, 100));
+            new BlueBlock(new Vector2(500, 200));
+            new GreenBlock(new Vector2(580+330, 200));
+            new BlueBlock(new Vector2(900 + 330, 100));
+            new BlueBlock(new Vector2(1050 + 330, 180));
+            new RedBlock(new Vector2(100, 600));
+            new RedBlock(new Vector2(200, 600));
+            new RedBlock(new Vector2(300, 600));
+            new RedBlock(new Vector2(400, 600));
         }
 
     }
