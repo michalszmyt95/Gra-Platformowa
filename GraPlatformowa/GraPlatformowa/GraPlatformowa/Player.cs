@@ -92,16 +92,17 @@ namespace GraPlatformowa
             }
             
         }
+
         private Block Collision()
         {
-            
+
             //Jeśli funkcja collision.In() zwraca obiekt, znaczy ze pozycja i skala gracza ma część wspólną z danym obiektem.
             //W przeciwnym wypadku, gdy funkcja zwraca null, znaczy, że gracz z niczym aktualnie nie koliduje.
             Block block = collision.In();
 
             if (block != null)
             {            /*  Przedzial wysokosci bloku, z ktorego gracz automatycznie zostanie podniesiony na góre bloku  -------VVVV   */
-                if ((this.position.Y + this.scale.Y) >= block.getY() && (this.position.Y + this.scale.Y) <= block.getY() + this.stairHeight && this.velocity.Y >= 0)
+                if ((this.position.Y + this.scale.Y) >= block.GetPosition().Y && (this.position.Y + this.scale.Y) <= block.GetPosition().Y + this.stairHeight && this.velocity.Y >= 0)
                 {
                     // Kod sprawdzający czy gracz zmienił blok z którym kolidował poprzednio wiedząc, że poprzedni nie był null:
                     if (this.lastBlockColided != block)
@@ -110,7 +111,7 @@ namespace GraPlatformowa
 
                     if (!this.jumping)
                     {
-                        this.position.Y = block.getY() - this.scale.Y;
+                        this.position.Y = block.GetPosition().Y - this.scale.Y;
                         this.standing = true;
                     }
                     // Jeśli gracz skakał zamiast tylko spadać, to zależność wchodzenia po schodach nie powinna działać, dlatego by gracz sie utrzymał na bloku,
@@ -118,7 +119,7 @@ namespace GraPlatformowa
                     // (chodzi o to, by gracz co skoczył na zbyt wysoki blok nie został automatycznie wciągnięty na górę gdy nie pokonał całej drogi by stanąć na bloku)
                     else if (this.jumping && this.velocity.Y >= 3.1f)
                     {
-                        this.position.Y = block.getY() - this.scale.Y;
+                        this.position.Y = block.GetPosition().Y - this.scale.Y;
                         this.standing = true;
                         this.jumping = false;
                     }
@@ -139,11 +140,12 @@ namespace GraPlatformowa
             if (this.standing)
             {
                 this.velocity.Y = 0;
-                PlayerGetOnBlock(block,EventArgs.Empty);
+                PlayerGetOnBlock(block, EventArgs.Empty);
             }
 
             return block;
         }
+
         public void Restart()
         {
             this.position.X = 10;

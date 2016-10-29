@@ -16,11 +16,11 @@ namespace GraPlatformowa
     {
         Player player = new Player(new Vector2(10,10), Game1.playerTexture);
         public static List<Block> staticBlocks = new List<Block>();
-        private int level = 1;
+        private int level = 2;
 
         public void Initialize()
         {
-            this.Level5();
+            this.Level2();
             Delegaty();
         }
 
@@ -87,12 +87,12 @@ namespace GraPlatformowa
         /// </summary>
         private void Level1()
         {
-            for (int i = 10; i<1400; i+=340)
+            for (int i = 10; i<1400; i+=342)
                 new BlueBlock(new Vector2(i, 180));
 
-            for (int i = 1200; i >= 10; i -= 150)
+            for (int i = 1180; i >= 10; i -= 150)
             {
-                if(i>250) new BlueBlock(new Vector2(i, 600 - i / 4));
+                if(i>200) new BlueBlock(new Vector2(i, 600 - i / 4));
                 else new RedBlock(new Vector2(i, 600 - i / 4));
 
             }
@@ -108,7 +108,6 @@ namespace GraPlatformowa
                     new GreenBlock(new Vector2(30, 80 * i));
                 new BlueBlock(new Vector2(10, 80 * (i-1)));
             }
-
             new BlueBlock(new Vector2(300, 385));
             new BlueBlock(new Vector2(380, 385));
             new BlueBlock(new Vector2(460, 385));

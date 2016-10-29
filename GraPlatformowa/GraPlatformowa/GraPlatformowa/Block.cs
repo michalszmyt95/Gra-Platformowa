@@ -64,26 +64,5 @@ namespace GraPlatformowa
                 SceneManager.staticBlocks.Remove(this);
             }
         }
-
-
-        //Funkcje zwracające parametry pozycji i skali każdego bloku:
-        public float getX()
-        {
-            return this.position.X;
-        }
-        public float getY()
-        {
-            return this.position.Y;
-        }
-        public int getWidth()
-        {
-            return this.rect.Width;
-        }
-        public int getHeight()
-        {
-            return this.rect.Height;
-        }
-
-
     }
 }
