@@ -116,45 +116,6 @@ namespace GraPlatformowa
         {
             if (!this.standing) velocity.Y += 0.15f * gravity;
         }
-        /*
-        private void Collision()
-        {
-            //Jeśli funkcja collision.In() zwraca obiekt, znaczy ze pozycja i skala gracza ma część wspólną z danym obiektem.
-            //W przeciwnym wypadku, gdy funkcja zwraca null, znaczy, że gracz z niczym aktualnie nie koliduje.
-            Block block = collision.On();
-            if (block != null)
-            {
-                if (this.lastPosition.Y == this.position.Y && this.standing) //<-- Ten blok kodu odpowiada za możliwość chodzenia po schodkach.
-                    this.position.Y = block.GetPosition().Y - this.scale.Y;
-
-                if (this.velocity.Y >= 0 && this.lastPosition.Y + this.scale.Y <= block.GetPosition().Y) //<-- Ten blok kodu odpowiada za warunek stania na bloku gdy gracz był w ruchu Y.
-                {
-                    this.position.Y = block.GetPosition().Y - this.scale.Y;
-                    this.standing = true;
-                }
-                else this.standing = false; //<-- Ta linijka kodu jest potrzebna, by gracz mógł skakać stojąc na bloku.
-            }
-            else //Gdy blok z którym gracz koliduje to null, czyli gracz z niczym nie koliduje:
-            {
-                this.standing = false; 
-                PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty);
-            }
-            if (this.standing)
-            {
-
-
-                this.velocity.Y = 0;
-               //Emitowanie Eventu, że gracz właśnie wszedł na bok.
-                PlayerGetOnBlock(block, EventArgs.Empty);
-               //Emitowanie Eventu, że gracz właśnie wyszedł z bloku (dla warunku, że wciąż stoi na JAKIMŚ bloku - innym niż poprzednio).
-                if (this.lastBlockColided != block)
-                    PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty);
-                this.lastBlockColided = block;
-            }
-        }
-        */
-
-
         private void Collision()  //collision.IcyTowerLike() [0] <- blok z którym gracz aktuanie koliduje, [1] <- czy gracz na nim stoi
         {
             List<object> collisionList = new List<object>();
