@@ -14,7 +14,7 @@ namespace GraPlatformowa
 {
     class SceneManager
     {
-        Player player = new Player(new Vector2(10,10), Game1.playerTexture);
+        Player player = new Player(new Vector2(10,10), Game1.playerLegsTexture, Game1.playerHeadTexture);
         public static List<Block> staticBlocks = new List<Block>();
         private int level = 1;
 
@@ -69,14 +69,29 @@ namespace GraPlatformowa
 
         private void Restart()
         {
-            if (player.GetPosition().Y > 1000)
+            if (player.GetPosition().Y > 1000 && !everyBlockIsDisappearing())
             {
                 player.Restart();
 
                 staticBlocks.RemoveRange(0, staticBlocks.Count());
                 this.level -= 1;
             }
+        }
 
+        private bool everyBlockIsDisappearing()
+        {
+            int j = 0;
+            for (int i = 0; i < staticBlocks.Count(); i++)
+            {
+                if (staticBlocks[i].GetDisappearing())
+                {
+                    j++;
+                }
+                else return false;
+            }
+            if (j == staticBlocks.Count())
+                return true;
+            return false;
         }
 
 

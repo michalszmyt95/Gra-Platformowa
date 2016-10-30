@@ -56,6 +56,11 @@ namespace GraPlatformowa
             spriteBatch.Draw(this.texture, this.rect, Color.White * this.alpha);
         }
 
+        public bool GetDisappearing()
+        {
+            return this.disappearing;
+        }
+
         public void Disappear()
         {
             if (this.alpha > 0)

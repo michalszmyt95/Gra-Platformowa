@@ -14,15 +14,18 @@ namespace GraPlatformowa
 {
     class Player : GameObject
     {
-        Texture2D texture;
+        Texture2D headTexture;
+        Texture2D legsTexture;
         KeyboardState kbState;
         CollisionDetector collision;
-        Vector2 lastPosition = new Vector2();
+        Vector2 lastPosition;
+
+        private Vector2 headPositionDifference = new Vector2();
 
         private float speed = 6.5f;
         private float gravity = 2.5f;
         private float jumpSpeed = 9.5f;
-        private float friction = 1.5f;
+        private float friction = 2.5f;
         private Vector2 velocity = new Vector2();
         private Rectangle rect;
         private bool standing = false;
@@ -35,19 +38,21 @@ namespace GraPlatformowa
 
         private Block lastBlockColided; // Blok z którym gracz poprzednio kolidował.
 
-        public Player(Vector2 newPosition, Texture2D newTexture)
+        public Player(Vector2 newPosition, Texture2D newLegsTexture, Texture2D newHeadTexture)
         {
-            this.texture = newTexture;
+            this.headTexture = newHeadTexture;
+            this.legsTexture = newLegsTexture;
             this.position = newPosition;
             this.collision = new CollisionDetector(this);
-            this.rect = new Rectangle(0,0, (int) this.texture.Width, (int)this.texture.Height);
-            this.scale = new Vector2(this.texture.Width, this.texture.Height);
+            this.rect = new Rectangle(0,0, (int) this.legsTexture.Width, (int)this.legsTexture.Height);
+            this.scale = new Vector2(this.legsTexture.Width, this.legsTexture.Height);
         }
 
         public void Update(GameTime gameTime) // Funkcja wywoływana w Update gry.
         {
             this.lastPosition = this.position;
             this.position += this.velocity;
+            this.HeadMove();
             this.UpdateKeyboardState();
             this.Move();
             this.Jump();
@@ -57,7 +62,9 @@ namespace GraPlatformowa
 
         public void Draw(SpriteBatch spriteBatch) //Funkcja wywoływana w Draw gry.
         {
-            spriteBatch.Draw(this.texture, this.position, this.rect, Color.White);
+            spriteBatch.Draw(this.legsTexture, this.position, this.rect, Color.White);
+            Vector2 headPosition = this.position + headPositionDifference;
+            spriteBatch.Draw(this.headTexture, headPosition, this.rect, Color.White);
         }
 
         public void UpdateKeyboardState()
@@ -72,6 +79,27 @@ namespace GraPlatformowa
             this.velocity = new Vector2(0,0);
         }
 
+        //Funkcja która dostaje referencje danej zmiennej liczbowej, 
+        //która ma stać się wartością argumentu To, zwiększając się o wartość argumentu speed.
+        private void valueTo(ref float value, float to, float speed){
+            if (value < to)
+                value += speed;
+            else if (value > to)
+                value -= speed;
+            if (Math.Abs(value - to) < speed)
+                value = to;
+            }
+
+        private void HeadMove()
+        {
+            if (this.velocity.Y > 0) valueTo(ref headPositionDifference.Y, -27 -this.velocity.Y, 0.7f);
+            else if (this.velocity.Y < 0) valueTo(ref headPositionDifference.Y, -18, 2);
+            else valueTo(ref headPositionDifference.Y, -22,4f);
+            if (this.velocity.X != 0) valueTo(ref headPositionDifference.X, -this.velocity.X/3, 0.5f);
+           // else if (this.velocity.X < 0) valueTo(ref headPositionDifference.X, 3, 0.5f);
+            else valueTo(ref headPositionDifference.X, 0, 1);
+        }
+
         public Vector2 GetLastPosition()
         {
             return this.lastPosition;
@@ -81,8 +109,7 @@ namespace GraPlatformowa
             return this.velocity;
         }
 
-
-        //Funkcje determinujące ruch:
+        //Funkcje determinujące ruch postaci:
         private void Move()
         {
             if ((kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.Left))) this.velocity.X = -this.speed;

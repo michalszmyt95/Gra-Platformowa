@@ -16,7 +16,7 @@ namespace GraPlatformowa
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SceneManager sceneManager;
-        public static Texture2D blueBlockTexture, redBlockTexture, greenBlockTexture, playerTexture;
+        public static Texture2D blueBlockTexture, redBlockTexture, greenBlockTexture, playerTexture, playerLegsTexture, playerHeadTexture;
 
        // Song bgMusic;
 
@@ -46,6 +46,8 @@ namespace GraPlatformowa
 
             //£adowanie zasobów:
             playerTexture = Content.Load<Texture2D>("pl1");
+            playerLegsTexture = Content.Load<Texture2D>("playerLegs");
+            playerHeadTexture = Content.Load<Texture2D>("playerHead");
             blueBlockTexture = Content.Load<Texture2D>("blue2");
             redBlockTexture = Content.Load<Texture2D>("red2");
             greenBlockTexture = Content.Load<Texture2D>("green2");
