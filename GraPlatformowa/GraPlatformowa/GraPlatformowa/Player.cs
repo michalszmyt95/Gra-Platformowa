@@ -22,6 +22,7 @@ namespace GraPlatformowa
         private float speed = 6.5f;
         private float gravity = 2.5f;
         private float jumpSpeed = 9.5f;
+        private float friction = 1.5f;
         private Vector2 velocity = new Vector2();
         private Rectangle rect;
         private bool standing = false;
@@ -64,12 +65,47 @@ namespace GraPlatformowa
             this.kbState = Keyboard.GetState();
         }
 
+        public void Restart()
+        {
+            this.position.X = 10;
+            this.position.Y = 10;
+            this.velocity = new Vector2(0,0);
+        }
+
+        public Vector2 GetLastPosition()
+        {
+            return this.lastPosition;
+        }
+        public Vector2 GetVelocity()
+        {
+            return this.velocity;
+        }
+
+
         //Funkcje determinujące ruch:
         private void Move()
         {
             if ((kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.Left))) this.velocity.X = -this.speed;
             else if ((kbState.IsKeyDown(Keys.D) || kbState.IsKeyDown(Keys.Right))) this.velocity.X = this.speed;
-            else this.velocity.X = 0;
+            else
+            { //Tarcie (friction):
+                if (!this.standing)
+                {
+                    if (this.velocity.X > this.friction)
+                        this.velocity.X -= 0.4f * this.friction;
+                    else if (this.velocity.X < -this.friction)
+                        this.velocity.X += 0.4f * this.friction;
+                    else this.velocity.X = 0;
+                }
+                else
+                {
+                    if (this.velocity.X > this.friction)
+                        this.velocity.X -= 0.9f * this.friction;
+                    else if (this.velocity.X < -this.friction)
+                        this.velocity.X += 0.9f * this.friction;
+                    else this.velocity.X = 0;
+                }
+            }
         }
         private void Jump()
         {
@@ -80,19 +116,17 @@ namespace GraPlatformowa
         {
             if (!this.standing) velocity.Y += 0.15f * gravity;
         }
+        /*
         private void Collision()
         {
             //Jeśli funkcja collision.In() zwraca obiekt, znaczy ze pozycja i skala gracza ma część wspólną z danym obiektem.
             //W przeciwnym wypadku, gdy funkcja zwraca null, znaczy, że gracz z niczym aktualnie nie koliduje.
-            Block block = collision.In();
-
+            Block block = collision.On();
             if (block != null)
             {
-                if (this.lastPosition.Y == this.position.Y ) //<-- Ten blok kodu odpowiada za możliwość chodzenia po schodkach.
-                {
+                if (this.lastPosition.Y == this.position.Y && this.standing) //<-- Ten blok kodu odpowiada za możliwość chodzenia po schodkach.
                     this.position.Y = block.GetPosition().Y - this.scale.Y;
-                    this.standing = true;
-                }
+
                 if (this.velocity.Y >= 0 && this.lastPosition.Y + this.scale.Y <= block.GetPosition().Y) //<-- Ten blok kodu odpowiada za warunek stania na bloku gdy gracz był w ruchu Y.
                 {
                     this.position.Y = block.GetPosition().Y - this.scale.Y;
@@ -107,24 +141,37 @@ namespace GraPlatformowa
             }
             if (this.standing)
             {
+
+
                 this.velocity.Y = 0;
-                
                //Emitowanie Eventu, że gracz właśnie wszedł na bok.
                 PlayerGetOnBlock(block, EventArgs.Empty);
-
-               //Emitowanie Eventu, że gracz właśnie wyszedł z bloku (dla warunku, że wciąż stoi na JAKIMŚ bloku - innym niż poprzednio)
+               //Emitowanie Eventu, że gracz właśnie wyszedł z bloku (dla warunku, że wciąż stoi na JAKIMŚ bloku - innym niż poprzednio).
                 if (this.lastBlockColided != block)
                     PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty);
                 this.lastBlockColided = block;
             }
         }
+        */
 
-        public void Restart()
+
+        private void Collision()  //collision.IcyTowerLike() [0] <- blok z którym gracz aktuanie koliduje, [1] <- czy gracz na nim stoi
         {
-            this.position.X = 10;
-            this.position.Y = 10;
-            this.velocity.Y = 0;
-        }
+            List<object> collisionList = new List<object>();
+            collisionList = collision.IcyTowerLike(ref this.position.Y, ref this.velocity.Y);
 
+            Block block = (Block) collisionList[0];
+            this.standing = (bool) collisionList[1];
+
+            if (this.standing)
+            {   
+                PlayerGetOnBlock(block, EventArgs.Empty); // <-- Gracz właśnie wszedł na blok.
+                if (this.lastBlockColided != block)
+                    PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty); //<-- dla warunku, że wciąż stoi na JAKIMŚ bloku.
+                this.lastBlockColided = block;
+            }
+            else PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty); // <-- dla warunku, że gracz już na żadnym bloku nie stoi.
+        }
+        
     }
 }

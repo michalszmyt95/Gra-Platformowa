@@ -114,7 +114,7 @@ namespace GraPlatformowa
             new BlueBlock(new Vector2(540 + 300, 385));
             new BlueBlock(new Vector2(800 + 300, 400));
             new BlueBlock(new Vector2(720 + 300, 295));
-            new RedBlock(new Vector2(930+300, 275));
+            new RedBlock(new Vector2(930+300, 274));
         }
         private void Level3()
         {
@@ -147,7 +147,7 @@ namespace GraPlatformowa
             new BlueBlock(new Vector2(580, 200));
             new GreenBlock(new Vector2(600+330, 200));
             new BlueBlock(new Vector2(900 + 330, 100));
-            new BlueBlock(new Vector2(1050 + 330, 180));
+            new RedBlock(new Vector2(1050 + 330, 180));
             new RedBlock(new Vector2(10, 600));
             new RedBlock(new Vector2(100, 600));
             new RedBlock(new Vector2(190, 600));

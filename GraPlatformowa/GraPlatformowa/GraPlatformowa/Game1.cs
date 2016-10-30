@@ -77,7 +77,7 @@ namespace GraPlatformowa
         protected override void Draw(GameTime gameTime)
         {
             //Pierwsze wyœwietla siê t³o.
-            GraphicsDevice.Clear(new Color(20,20,20));
+            GraphicsDevice.Clear(new Color(33,22,35));
 
             spriteBatch.Begin();
             sceneManager.Draw(spriteBatch);
