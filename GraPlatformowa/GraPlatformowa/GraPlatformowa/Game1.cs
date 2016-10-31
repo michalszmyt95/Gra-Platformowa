@@ -16,7 +16,7 @@ namespace GraPlatformowa
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SceneManager sceneManager;
-        public static Texture2D blueBlockTexture, redBlockTexture, greenBlockTexture, playerTexture, playerLegsTexture, playerHeadTexture;
+        public static Texture2D playerLegsAnimationTexture, blueBlockTexture, redBlockTexture, greenBlockTexture, playerTexture, playerLegsTexture, playerHeadTexture;
 
        // Song bgMusic;
 
@@ -26,7 +26,9 @@ namespace GraPlatformowa
             graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 1440;
             graphics.PreferredBackBufferHeight = 720;
+            TargetElapsedTime = TimeSpan.FromSeconds(1 / 60.0); // Prêdkoœæ gry = 60 klatek na sekundê.
             Content.RootDirectory = "Content"; // Katalog, w którym znajduj¹ siê zasoby gry.
+
         }
 
         // Inicjalizacja zewnêtrznych zasobów gry (takich jak muzyka)
@@ -36,7 +38,6 @@ namespace GraPlatformowa
             sceneManager = new SceneManager();
             sceneManager.Initialize();
         }
-
 
         // Pobieranie zewnêtrznych zasobów do projektu.
         protected override void LoadContent()
@@ -48,12 +49,13 @@ namespace GraPlatformowa
             playerTexture = Content.Load<Texture2D>("pl1");
             playerLegsTexture = Content.Load<Texture2D>("playerLegs");
             playerHeadTexture = Content.Load<Texture2D>("playerHead");
+            playerLegsAnimationTexture = Content.Load<Texture2D>("playerLegsAnimation");
             blueBlockTexture = Content.Load<Texture2D>("blue2");
             redBlockTexture = Content.Load<Texture2D>("red2");
             greenBlockTexture = Content.Load<Texture2D>("green2");
 
             // bgMusic = Content.Load<Song>("bgMusic1");
-                 // Odtwarzanie muzyki przy starcie aplikacji:
+            // Odtwarzanie muzyki przy starcie aplikacji:
             // MediaPlayer.Play(bgMusic);
             // MediaPlayer.IsRepeating = true;
         }

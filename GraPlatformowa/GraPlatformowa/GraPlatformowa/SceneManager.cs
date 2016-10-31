@@ -14,7 +14,7 @@ namespace GraPlatformowa
 {
     class SceneManager
     {
-        Player player = new Player(new Vector2(10,10), Game1.playerLegsTexture, Game1.playerHeadTexture);
+        Player player = new Player(new Vector2(10,10), Game1.playerLegsAnimationTexture, Game1.playerHeadTexture);
         public static List<Block> staticBlocks = new List<Block>();
         private int level = 1;
 
@@ -102,7 +102,7 @@ namespace GraPlatformowa
         /// </summary>
         private void Level1()
         {
-            for (int i = 10; i<1400; i+=342)
+            for (int i = 10; i<1400; i+=62)
                 new BlueBlock(new Vector2(i, 180));
 
             for (int i = 1180; i >= 10; i -= 150)
