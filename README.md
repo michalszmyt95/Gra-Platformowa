@@ -1,5 +1,7 @@
 # Gra-Platformowa
 
+Autor: Michał Szmyt
+
 Gra platformowa, w której celem jest sprawienie, by każda platforma na danym poziomie zniknęła. By platforma zaczęła znikać, należy na nią nastąpić. 
 
 Żółta platforma znika w bardzo wolnym tempie, dopiero po zeskoczeniu z niej.
