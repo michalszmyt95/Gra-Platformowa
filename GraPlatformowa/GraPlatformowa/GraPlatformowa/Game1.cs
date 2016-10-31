@@ -16,6 +16,10 @@ namespace GraPlatformowa
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SceneManager sceneManager;
+        ScreenManager screenManager;
+        SpriteBatch targetBatch;
+        RenderTarget2D target;
+
         public static Texture2D playerLegsAnimationTexture, blueBlockTexture, redBlockTexture, greenBlockTexture, playerTexture, playerLegsTexture, playerHeadTexture;
 
        // Song bgMusic;
@@ -23,9 +27,9 @@ namespace GraPlatformowa
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferWidth = 1440;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = 1600;
+            graphics.PreferredBackBufferHeight = 900;
+            screenManager = new ScreenManager(graphics);
             TargetElapsedTime = TimeSpan.FromSeconds(1 / 60.0); // Prêdkoœæ gry = 60 klatek na sekundê.
             Content.RootDirectory = "Content"; // Katalog, w którym znajduj¹ siê zasoby gry.
 
@@ -58,10 +62,12 @@ namespace GraPlatformowa
             // Odtwarzanie muzyki przy starcie aplikacji:
             // MediaPlayer.Play(bgMusic);
             // MediaPlayer.IsRepeating = true;
+
+            
+
         }
 
         protected override void UnloadContent(){}
-
 
         // Metoda wywo³uje siê 60 razy na sekundê - pêtla gry(input, kolizje, dŸwiêk):
         protected override void Update(GameTime gameTime)
@@ -72,20 +78,39 @@ namespace GraPlatformowa
             {
                 SceneManager.staticBlocks[i].Update();
             }
+            screenManager.Update(gameTime);
 
-            // animacja bazuj¹ca na czasie
+            if (graphics.IsFullScreen)
+            {
+                graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+                graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            }
+
             base.Update(gameTime);
         }
 
         // Metoda wywo³ywana tak czêsto jak to mo¿liwe, po metodzie Update(), s³u¿y do odœwie¿ania wyœwietlanych elementów:
         protected override void Draw(GameTime gameTime)
         {
-            //Pierwsze wyœwietla siê t³o.
-            GraphicsDevice.Clear(new Color(33,22,35));
 
-            spriteBatch.Begin();
-            sceneManager.Draw(spriteBatch);
-            spriteBatch.End();
+            // TargetBatch - do renderowania wszystkiego w jednym konkretnym pakiecie.
+            targetBatch = new SpriteBatch(GraphicsDevice);
+            target = new RenderTarget2D(GraphicsDevice, 1600, 900); //<-- Ustawienie rozdzielczoœci gry, któr¹ bêdzie mo¿na skalowaæ do docelowych rozdzielczoœci gracza.
+            GraphicsDevice.SetRenderTarget(target);
+
+            //Rysowanie gry do targetBatch:
+            GraphicsDevice.Clear(new Color(33, 22, 35)); //<-- T³o.
+            targetBatch.Begin();
+            sceneManager.Draw(targetBatch);
+            targetBatch.End();
+
+            //Renderowanie spowrotem do buffera:
+            GraphicsDevice.SetRenderTarget(null);
+
+            //Renderowanie tego co by³o renderowane do target w g³ównym bufferze, skaluj¹c rozdzielczoœæ do tej któr¹ ustawi³ sobie gracz:
+            targetBatch.Begin();
+            targetBatch.Draw(target, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+            targetBatch.End();
 
             base.Draw(gameTime);
         }

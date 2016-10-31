@@ -102,7 +102,7 @@ namespace GraPlatformowa
         /// </summary>
         private void Level1()
         {
-            for (int i = 10; i<1400; i+=62)
+            for (int i = 10; i<1320; i+=62)
                 new BlueBlock(new Vector2(i, 180));
 
             for (int i = 1180; i >= 10; i -= 150)

@@ -14,25 +14,29 @@ namespace GraPlatformowa
 {
     class Player : GameObject
     {
-        private SpriteEffects flip = SpriteEffects.None;
+        //Zmienne dla animacji/rysowania:
         private Texture2D headTexture;
         private Texture2D legsTexture;
-        private KeyboardState kbState;
-        private CollisionDetector collision;
-        private Vector2 lastPosition;
-        private Vector2 headPositionDifference = new Vector2();
+        private SpriteEffects flip;
         private int timeElapsed = 0;
         private int delay = 47;
         private int frames = 0;
+        private Rectangle frameRect;
+        private bool animateJump = false;
+        private bool animateWalk = false;
+        private Vector2 headPositionDifference;
+
+        //Zmienne logiki postaci:
+        private KeyboardState kbState;
+        private CollisionDetector collision;
+        private Vector2 lastPosition;
+        private Vector2 velocity;
         private float speed = 6.5f;
         private float gravity = 2.5f;
         private float jumpSpeed = 9.5f;
-        private float friction = 2f;
-        private Vector2 velocity = new Vector2();
-        private Rectangle frameRect;
+        private float friction = 1f;
         private bool standing = false;
-        private bool animateJump = false;
-        private bool animateWalk = false;
+
 
         //  Delegaci dla eventów określających kiedy gracz wskoczył na blok i kiedy z niego zeskoczył:
         public delegate void PlayerEscapedFromBlockEventHandler(object source, EventArgs args);
@@ -53,7 +57,8 @@ namespace GraPlatformowa
             this.scale = new Vector2(this.legsTexture.Width/4, this.legsTexture.Height/3);
         }
 
-        public void Update(GameTime gameTime) // Funkcja wywoływana w Update gry.
+        // Funkcja wywoływana w Update gry:
+        public void Update(GameTime gameTime)
         {
             this.lastPosition = this.position;
             this.position += this.velocity;
@@ -66,23 +71,31 @@ namespace GraPlatformowa
             this.Animation(gameTime);
         }
 
-        public void Draw(SpriteBatch spriteBatch) //Funkcja wywoływana w Draw gry.
+        //Funkcja wywoływana w Draw gry:
+        public void Draw(SpriteBatch spriteBatch)
         {
             Vector2 headPosition = this.position + headPositionDifference;
             spriteBatch.Draw(this.legsTexture, this.position, this.frameRect, Color.White, 0, new Vector2(0,0), new Vector2(1,1), flip, 0);
             spriteBatch.Draw(this.headTexture, headPosition, null, Color.White, 0, new Vector2(0,0), new Vector2(1, 1), flip, 0);
         }
+        public void Restart()
+        {
+            this.position.X = 10;
+            this.position.Y = 10;
+            this.velocity = new Vector2(0, 0);
+            this.flip = SpriteEffects.None;
+        }
 
+        //Animacja:
         private void Animation(GameTime gameTime)
         {
-            this.timeElapsed += (int)gameTime.ElapsedGameTime.TotalMilliseconds; // <-- zmienna prechowująca upływ czasu.
+            this.timeElapsed += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (this.timeElapsed >= this.delay){
                 if (this.animateWalk && this.standing) WalkAnimation(ref timeElapsed);
                 else if (this.animateJump) JumpAnimation(ref timeElapsed);
                 else StandAnimation(ref timeElapsed);
             }
         }
-
         private void StandAnimation(ref int timeElapsed)
         {
             this.frameRect = new Rectangle(36 * this.frames, 0, (int)this.legsTexture.Width / 4, (int)this.legsTexture.Height / 3);
@@ -93,7 +106,6 @@ namespace GraPlatformowa
                 timeElapsed = 0;
             }
         }
-
         private void JumpAnimation(ref int timeElapsed)
         {
             this.frameRect = new Rectangle(36 * this.frames, 48, (int)this.legsTexture.Width / 4, (int)this.legsTexture.Height / 3);
@@ -106,7 +118,6 @@ namespace GraPlatformowa
                 timeElapsed = 0;
             }
         }
-
         private void WalkAnimation(ref int timeElapsed){
             this.frameRect = new Rectangle(36 * this.frames, 24, (int)this.legsTexture.Width / 4, (int)this.legsTexture.Height / 3);
             if (frames >= 3) frames = 0;
@@ -114,15 +125,9 @@ namespace GraPlatformowa
             timeElapsed = 0;
         }
 
+        //Input:
         private void UpdateKeyboardState(){
             this.kbState = Keyboard.GetState();
-        }
-
-        public void Restart(){
-            this.position.X = 10;
-            this.position.Y = 10;
-            this.velocity = new Vector2(0,0);
-            this.flip = SpriteEffects.None;
         }
 
         //Funkcja która dostaje referencje danej zmiennej liczbowej, 
