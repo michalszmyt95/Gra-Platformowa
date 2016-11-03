@@ -14,7 +14,7 @@ namespace GraPlatformowa
 {
     class SceneManager
     {
-        Player player = new Player(new Vector2(10,10), Game1.playerLegsAnimationTexture, Game1.playerHeadTexture);
+        Player player = new Player(new Vector2(300,250), Game1.playerLegsAnimationTexture, Game1.playerHeadTexture);
         public static List<Block> staticBlocks = new List<Block>();
         private int level = 1;
 
@@ -102,15 +102,25 @@ namespace GraPlatformowa
         /// </summary>
         private void Level1()
         {
-            for (int i = 10; i<1320; i+=62)
-                new BlueBlock(new Vector2(i, 180));
+            for (int i = 0; i<3; i++) //5 bloków przy sobie
+                new BlueBlock(new Vector2(300 + 50*i, 350));
+            for (int i = 0; i < 3; i++) 
+                new BlueBlock(new Vector2(300 + 50 * i, 200));
+            for (int i = 0; i < 5; i++)
+                new RedBlock(new Vector2(550 + 50 * i, 350 - i*15));
+            for (int i = 0; i < 3; i++) 
+                new RedBlock(new Vector2(300 + 50 * i, 500));
+            new RedBlock(new Vector2(1000, 300));
+            new BlueBlock(new Vector2(1250, 300));
 
-            for (int i = 1180; i >= 10; i -= 150)
-            {
-                if(i>200) new BlueBlock(new Vector2(i, 600 - i / 4));
-                else new RedBlock(new Vector2(i, 600 - i / 4));
+            new GreenBlock(new Vector2(700, 575));
+            for (int i = 0; i < 6; i++) 
+                new RedBlock(new Vector2(1000 + 50 * i, 700));
+            new GreenBlock(new Vector2(550, 700));
+            new BlueBlock(new Vector2(300, 700));
+            for (int i = 0; i < 6; i++)
+                new RedBlock(new Vector2(1000 + 50 * i, 500));
 
-            }
 
         }
         private void Level2()
@@ -133,7 +143,7 @@ namespace GraPlatformowa
         }
         private void Level3()
         {
-            new BlueBlock(new Vector2(10, 200));
+          //  new BlueBlock(new Vector2(10, 200));
             for (int i = 1; i < 10; i++)
                 new RedBlock(new Vector2(200 + (100 * i), 400));
             new BlueBlock(new Vector2(600, 250));
@@ -142,7 +152,7 @@ namespace GraPlatformowa
         }
         private void Level4()
         {
-            new BlueBlock(new Vector2(10, 200));
+           // new BlueBlock(new Vector2(10, 200));
             for (int i = 0; i < 11; i++)
             {
                 new RedBlock(new Vector2(60 + (120 * i), 600 - (15 * i)));
@@ -154,11 +164,11 @@ namespace GraPlatformowa
         }
         private void Level5()
         {
-            new BlueBlock(new Vector2(10, 100));
-            new BlueBlock(new Vector2(100, 100));
-            new BlueBlock(new Vector2(190, 100));
-            new BlueBlock(new Vector2(280, 100));
-            new BlueBlock(new Vector2(370, 100));
+         //   new BlueBlock(new Vector2(10, 100));
+            new BlueBlock(new Vector2(300, 320));
+            new BlueBlock(new Vector2(390, 300));
+           // new BlueBlock(new Vector2(280, 100));
+           // new BlueBlock(new Vector2(370, 100));
             new BlueBlock(new Vector2(580, 200));
             new GreenBlock(new Vector2(600+330, 200));
             new BlueBlock(new Vector2(900 + 330, 100));

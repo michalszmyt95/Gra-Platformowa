@@ -29,16 +29,17 @@ namespace GraPlatformowa
         //Zmienne logiki postaci:
         private KeyboardState kbState;
         private CollisionDetector collision;
+        private Vector2 startPosition;
         private Vector2 lastPosition;
         private Vector2 velocity;
         private float speed = 6.5f;
         private float gravity = 2.5f;
         private float jumpSpeed = 9.5f;
-        private float friction = 1f;
+        private float friction = 2f;
         private bool standing = false;
 
 
-        //  Delegaci dla eventów określających kiedy gracz wskoczył na blok i kiedy z niego zeskoczył:
+        // Delegaci dla eventów określających kiedy gracz wskoczył na blok i kiedy z niego zeskoczył:
         public delegate void PlayerEscapedFromBlockEventHandler(object source, EventArgs args);
         public event PlayerEscapedFromBlockEventHandler PlayerEscapedFromBlock;
 
@@ -47,17 +48,17 @@ namespace GraPlatformowa
 
         private Block lastBlockColided;
 
-        public Player(Vector2 newPosition, Texture2D newLegsTexture, Texture2D newHeadTexture)
+        public Player(Vector2 newStartPosition, Texture2D newLegsTexture, Texture2D newHeadTexture)
         {
             this.headTexture = newHeadTexture;
             this.legsTexture = newLegsTexture;
-            this.position = newPosition;
+            this.position = this.startPosition = newStartPosition;
             this.collision = new CollisionDetector(this);
             this.frameRect = new Rectangle(0,0, (int)this.legsTexture.Width / 4, (int)this.legsTexture.Height / 3);
             this.scale = new Vector2(this.legsTexture.Width/4, this.legsTexture.Height/3);
         }
 
-        // Funkcja wywoływana w Update gry:
+        //Funkcja wywoływana w Update gry:
         public void Update(GameTime gameTime)
         {
             this.lastPosition = this.position;
@@ -78,10 +79,10 @@ namespace GraPlatformowa
             spriteBatch.Draw(this.legsTexture, this.position, this.frameRect, Color.White, 0, new Vector2(0,0), new Vector2(1,1), flip, 0);
             spriteBatch.Draw(this.headTexture, headPosition, null, Color.White, 0, new Vector2(0,0), new Vector2(1, 1), flip, 0);
         }
+
         public void Restart()
         {
-            this.position.X = 10;
-            this.position.Y = 10;
+            this.position = startPosition;
             this.velocity = new Vector2(0, 0);
             this.flip = SpriteEffects.None;
         }

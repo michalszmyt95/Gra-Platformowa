@@ -41,6 +41,7 @@ namespace GraPlatformowa
             base.Initialize();
             sceneManager = new SceneManager();
             sceneManager.Initialize();
+            target = new RenderTarget2D(GraphicsDevice, 1600, 900); //<-- Ustawienie rozdzielczoœci gry, któr¹ bêdzie mo¿na skalowaæ do docelowych rozdzielczoœci gracza.
         }
 
         // Pobieranie zewnêtrznych zasobów do projektu.
@@ -48,6 +49,7 @@ namespace GraPlatformowa
         {
             // Stworzono obiekt za pomoc¹ konstrukora new SpriteBatch(), który u¿ywany jest do renderowania tekstur.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+          //  targetBatch = new SpriteBatch(GraphicsDevice); // - do renderowania wszystkiego w jednym konkretnym pakiecie.
 
             //£adowanie zasobów:
             playerTexture = Content.Load<Texture2D>("pl1");
@@ -85,32 +87,30 @@ namespace GraPlatformowa
                 graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
                 graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             }
-
+            
             base.Update(gameTime);
         }
 
         // Metoda wywo³ywana tak czêsto jak to mo¿liwe, po metodzie Update(), s³u¿y do odœwie¿ania wyœwietlanych elementów:
         protected override void Draw(GameTime gameTime)
         {
-
-            // TargetBatch - do renderowania wszystkiego w jednym konkretnym pakiecie.
-            targetBatch = new SpriteBatch(GraphicsDevice);
-            target = new RenderTarget2D(GraphicsDevice, 1600, 900); //<-- Ustawienie rozdzielczoœci gry, któr¹ bêdzie mo¿na skalowaæ do docelowych rozdzielczoœci gracza.
+            //Renderowanie do targeta:         
             GraphicsDevice.SetRenderTarget(target);
 
             //Rysowanie gry do targetBatch:
-            GraphicsDevice.Clear(new Color(33, 22, 35)); //<-- T³o.
-            targetBatch.Begin();
-            sceneManager.Draw(targetBatch);
-            targetBatch.End();
+            GraphicsDevice.Clear(new Color(33, 22, 35)); //<-- T³o gry.
+            spriteBatch.Begin();
+            sceneManager.Draw(spriteBatch);
+            spriteBatch.End();
 
             //Renderowanie spowrotem do buffera:
             GraphicsDevice.SetRenderTarget(null);
 
+            GraphicsDevice.Clear(new Color(0, 0, 0)); //<-- T³o za renderowan¹ gr¹.
             //Renderowanie tego co by³o renderowane do target w g³ównym bufferze, skaluj¹c rozdzielczoœæ do tej któr¹ ustawi³ sobie gracz:
-            targetBatch.Begin();
-            targetBatch.Draw(target, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
-            targetBatch.End();
+            spriteBatch.Begin();        //Domyslnie rozdzielczosc gry 1600x900, dlatego skalowanie zawsze do prostok¹ta w proporcji 16/9 - VVV
+            spriteBatch.Draw(target, new Rectangle(0, (int) ((graphics.PreferredBackBufferHeight - (int) (graphics.PreferredBackBufferWidth * 0.5625f))/2.3f), graphics.PreferredBackBufferWidth, (int) (graphics.PreferredBackBufferWidth * 0.5625f)), Color.White);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
