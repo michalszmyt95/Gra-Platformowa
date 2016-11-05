@@ -17,10 +17,10 @@ namespace GraPlatformowa
         SpriteBatch spriteBatch;
         SceneManager sceneManager;
         ScreenManager screenManager;
-        SpriteBatch targetBatch;
         RenderTarget2D target;
 
         public static Texture2D playerLegsAnimationTexture, blueBlockTexture, redBlockTexture, greenBlockTexture, playerTexture, playerLegsTexture, playerHeadTexture;
+        public static SpriteFont menuFont;
 
        // Song bgMusic;
 
@@ -40,7 +40,6 @@ namespace GraPlatformowa
         {
             base.Initialize();
             sceneManager = new SceneManager();
-            sceneManager.Initialize();
             target = new RenderTarget2D(GraphicsDevice, 1600, 900); //<-- Ustawienie rozdzielczoœci gry, któr¹ bêdzie mo¿na skalowaæ do docelowych rozdzielczoœci gracza.
         }
 
@@ -65,7 +64,7 @@ namespace GraPlatformowa
             // MediaPlayer.Play(bgMusic);
             // MediaPlayer.IsRepeating = true;
 
-            
+            menuFont = Content.Load<SpriteFont>("Menu");
 
         }
 
@@ -74,19 +73,15 @@ namespace GraPlatformowa
         // Metoda wywo³uje siê 60 razy na sekundê - pêtla gry(input, kolizje, dŸwiêk):
         protected override void Update(GameTime gameTime)
         {
-            sceneManager.Update(gameTime);
-
+            sceneManager.Update(gameTime,this);
             for (int i = 0; i < SceneManager.staticBlocks.Count(); i++)
             {
                 SceneManager.staticBlocks[i].Update();
             }
-            screenManager.Update(gameTime);
 
-            if (graphics.IsFullScreen)
-            {
-                graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-                graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-            }
+            
+
+            screenManager.Update(gameTime);
             
             base.Update(gameTime);
         }
@@ -109,7 +104,7 @@ namespace GraPlatformowa
             GraphicsDevice.Clear(new Color(0, 0, 0)); //<-- T³o za renderowan¹ gr¹.
             //Renderowanie tego co by³o renderowane do target w g³ównym bufferze, skaluj¹c rozdzielczoœæ do tej któr¹ ustawi³ sobie gracz:
             spriteBatch.Begin();        //Domyslnie rozdzielczosc gry 1600x900, dlatego skalowanie zawsze do prostok¹ta w proporcji 16/9 - VVV
-            spriteBatch.Draw(target, new Rectangle(0, (int) ((graphics.PreferredBackBufferHeight - (int) (graphics.PreferredBackBufferWidth * 0.5625f))/2.3f), graphics.PreferredBackBufferWidth, (int) (graphics.PreferredBackBufferWidth * 0.5625f)), Color.White);
+            spriteBatch.Draw(target, new Rectangle(0, (int) ((graphics.PreferredBackBufferHeight - (int) (graphics.PreferredBackBufferWidth * 9/16))/2.3f), graphics.PreferredBackBufferWidth, (int) (graphics.PreferredBackBufferWidth * 9/16)), Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);

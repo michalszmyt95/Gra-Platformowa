@@ -208,15 +208,15 @@ namespace GraPlatformowa
             Block block = (Block) collisionList[0];
             this.standing = (bool) collisionList[1];
 
-            if (this.standing)
-            {
-                this.animateJump = false;
-                PlayerGetOnBlock(block, EventArgs.Empty); // <-- Gracz właśnie wszedł na blok.
-                if (this.lastBlockColided != block)
-                    PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty); //<-- dla warunku, że wciąż stoi na JAKIMŚ bloku.
-                this.lastBlockColided = block;
-            }
-            else PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty); // <-- dla warunku, że gracz już na żadnym bloku nie stoi.
+                if (this.standing)
+                {
+                    this.animateJump = false;
+                    PlayerGetOnBlock(block, EventArgs.Empty); // <-- Gracz właśnie wszedł na blok.
+                    if (this.lastBlockColided != block)
+                        PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty); //<-- dla warunku, że wciąż stoi na JAKIMŚ bloku.
+                    this.lastBlockColided = block;
+                }
+                else PlayerEscapedFromBlock(lastBlockColided, EventArgs.Empty); // <-- dla warunku, że gracz już na żadnym bloku nie stoi.
         }
         
     }

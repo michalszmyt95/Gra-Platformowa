@@ -15,10 +15,12 @@ namespace GraPlatformowa
     class SceneManager
     {
         Player player = new Player(new Vector2(300,250), Game1.playerLegsAnimationTexture, Game1.playerHeadTexture);
+        Menu menu = new Menu();
         public static List<Block> staticBlocks = new List<Block>();
         private int level = 1;
+        private bool displayMenu = true;
 
-        public void Initialize()
+        public SceneManager()
         {
             this.Level1();
             Delegaty();
@@ -26,28 +28,48 @@ namespace GraPlatformowa
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            DrawLevels(spriteBatch);
-            player.Draw(spriteBatch);
+            if (displayMenu)
+                menu.Draw(spriteBatch);
+            else
+            {
+                DrawLevels(spriteBatch);
+                player.Draw(spriteBatch);
+            } 
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime,Game1 game)
         {
-            player.Update(gameTime);
-            if (staticBlocks.Count() == 0)
+            if (menu.startNewGame)
+                displayMenu = false;
+
+            if (!displayMenu)
             {
-                this.level += 1;
-                switch (level)
+                player.Update(gameTime);
+                if (staticBlocks.Count() == 0)
                 {
-                    case 1: this.Level1(); player.Restart(); break;
-                    case 2: this.Level2(); player.Restart(); break;
-                    case 3: this.Level3(); player.Restart(); break;
-                    case 4: this.Level4(); player.Restart(); break;
-                    case 5: this.Level5(); player.Restart(); break;
-                    default: this.Level5(); player.Restart(); break;
+                    this.level += 1;
+                    switch (level)
+                    {
+                        case 1: this.Level1(); player.Restart(); break;
+                        case 2: this.Level2(); player.Restart(); break;
+                        case 3: this.Level3(); player.Restart(); break;
+                        case 4: this.Level4(); player.Restart(); break;
+                        case 5: this.Level5(); player.Restart(); break;
+                        default: this.Level5(); player.Restart(); break;
+                    }
+                }
+                Restart();
+                Delegaty();
+                if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
+                    displayMenu = true;
+                    menu.startNewGame = false;
                 }
             }
-            Restart();
-            Delegaty();
+            else
+            {
+                menu.Update(gameTime,game);
+            }
+
         }
 
         private void DrawLevels(SpriteBatch spriteBatch)
@@ -100,7 +122,7 @@ namespace GraPlatformowa
         /// <summary>
         /// Poniżej znajdują się poziomy gry:
         /// </summary>
-        private void Level1()
+        private void Level5()
         {
             for (int i = 0; i<3; i++) //5 bloków przy sobie
                 new BlueBlock(new Vector2(300 + 50*i, 350));
@@ -123,7 +145,7 @@ namespace GraPlatformowa
 
 
         }
-        private void Level2()
+        private void Level1()
         {
             for (int i = 2; i < 9; i += 2)
             {
@@ -150,7 +172,7 @@ namespace GraPlatformowa
             new BlueBlock(new Vector2(700, 300));
             new BlueBlock(new Vector2(500, 300));
         }
-        private void Level4()
+        private void Level2()
         {
            // new BlueBlock(new Vector2(10, 200));
             for (int i = 0; i < 11; i++)
@@ -162,7 +184,7 @@ namespace GraPlatformowa
             new RedBlock(new Vector2(720, 300));
             new RedBlock(new Vector2(640, 200));
         }
-        private void Level5()
+        private void Level4()
         {
          //   new BlueBlock(new Vector2(10, 100));
             new BlueBlock(new Vector2(300, 320));
