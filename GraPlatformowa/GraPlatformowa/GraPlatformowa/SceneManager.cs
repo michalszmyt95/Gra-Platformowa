@@ -39,8 +39,20 @@ namespace GraPlatformowa
 
         public void Update(GameTime gameTime,Game1 game)
         {
-            if (menu.startNewGame)
+            if (menu.GetVisibility() == false)
                 displayMenu = false;
+            else
+                displayMenu = true;
+
+            if (menu.GetNewGameState())
+            {
+                this.level = 1;
+                player.Restart();
+                staticBlocks.Clear();
+                this.Level1();
+                menu.SetNewGameState(false);
+                menu.Clear();
+            }
 
             if (!displayMenu)
             {
@@ -48,21 +60,21 @@ namespace GraPlatformowa
                 if (staticBlocks.Count() == 0)
                 {
                     this.level += 1;
-                    switch (level)
+                    switch (level) //Wybór wyświetlania poziomu:
                     {
                         case 1: this.Level1(); player.Restart(); break;
                         case 2: this.Level2(); player.Restart(); break;
                         case 3: this.Level3(); player.Restart(); break;
                         case 4: this.Level4(); player.Restart(); break;
                         case 5: this.Level5(); player.Restart(); break;
-                        default: this.Level5(); player.Restart(); break;
+                        default: menu.SetIfPlayerWon(true); menu.DisplayWin(); menu.SetVisibility(true); break;
                     }
                 }
                 Restart();
                 Delegaty();
                 if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
                     displayMenu = true;
-                    menu.startNewGame = false;
+                    menu.SetVisibility(true);
                 }
             }
             else
