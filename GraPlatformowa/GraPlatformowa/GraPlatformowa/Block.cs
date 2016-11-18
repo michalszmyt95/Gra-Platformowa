@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace GraPlatformowa
 {
-    class Block : GameObject
+    abstract class Block : GameObject
     {
 
         public virtual void OnPlayerGetOnBlock(object source, EventArgs e)

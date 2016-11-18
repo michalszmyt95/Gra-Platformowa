@@ -10,36 +10,62 @@ namespace GraPlatformowa
 {
     class Menu
     {
-        private string logo = "Logo gry";
-        private string[] menuOptions = new string[] { "Resume", "New game", "Options", "Author", "Exit" };
-        private string resume = "Resume";
-        private string[] resolutionOptions = new string[] { "Resolution: ", "800x600", "1024x768", "1280x720", "1366x768", "1440x900", "1600x900", "1920x1080" };
-        private string[] soundOptions = new string[] { "Sound: ", "Music: ","On", "Off" };
-        private int selected = 1;
+        private int selected = 0;
         private int chosenResolution;
+
         private Color selectedColor = Color.MediumVioletRed;
         private Color unselectedColor = Color.White;
+
         private KeyboardState kbState;
         private KeyboardState lastKbState;
 
-        public bool startNewGame { get; set; } = false;
+        List<MenuItem> menuItems = new List<MenuItem>();
 
-        public void Draw(SpriteBatch spriteBatch)
+        public bool startNewGame = false;
+
+        public Menu()
         {
-            spriteBatch.DrawString(Game1.menuFont, logo, new Vector2(650, 50), Color.White);
-            for (int i = 1; i < menuOptions.Length; i++)
-            {
-                if(i == selected)
-                    spriteBatch.DrawString(Game1.menuFont, menuOptions[i], new Vector2(650, 150 + 100 * i), selectedColor);
-                else
-                    spriteBatch.DrawString(Game1.menuFont, menuOptions[i], new Vector2(650, 150 + 100 * i), unselectedColor);
-            }
+            this.mainMenuView();
         }
+
+
         public void Update(GameTime gameTime, Game1 game)
         {
             UpdateKeyboardState();
             Selecting(game);
         }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            foreach (MenuItem menuItem in menuItems)
+            {
+                menuItem.Draw(spriteBatch);
+            }
+        }
+
+ 
+
+        private void mainMenuView()
+        {
+            menuItems.Add(new MenuItem(new Vector2(650, 200), "New Game"));
+            menuItems.Add(new MenuItem(new Vector2(650, 300), "Levels"));
+            menuItems.Add(new MenuItem(new Vector2(650, 400), "Options"));
+            menuItems.Add(new MenuItem(new Vector2(650, 500), "Author"));
+            menuItems.Add(new MenuItem(new Vector2(650, 600), "Exit"));
+        }
+        private void levelsView()
+        {
+
+        }
+        private void optionsView()
+        {
+
+        }
+        private void authorView()
+        {
+
+        }
+
 
         //Input:
         private void UpdateKeyboardState()
@@ -47,6 +73,7 @@ namespace GraPlatformowa
             this.lastKbState = kbState;
             this.kbState = Keyboard.GetState();
         }
+
         private void Selecting(Game1 game)
         {
             if(kbState.IsKeyDown(Keys.W) && !lastKbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.Up) && !lastKbState.IsKeyDown(Keys.Up))
@@ -57,18 +84,26 @@ namespace GraPlatformowa
             {
                 selected += 1;
             }
-            if (selected > menuOptions.Length-1)
-                selected = 1;
-            if (selected < 1)
-                selected = menuOptions.Length-1;
 
+            for(int i = 0; i< menuItems.Count; i++)
+            {
+                if (selected == i) menuItems[i].isItSelected(true);
+                else menuItems[i].isItSelected(false);
+            }
+
+            if (selected > menuItems.Count-1)
+                selected = 0;
+            if (selected < 0)
+                selected = menuItems.Count-1;
+
+            /*
             if (kbState.IsKeyDown(Keys.Enter))
                 switch (selected)
             {
                 case 1: this.startNewGame = true; menuOptions[1] = resume; break;
                 case 4: game.Exit(); break;
             }
-
+            */
         }
     }
 }

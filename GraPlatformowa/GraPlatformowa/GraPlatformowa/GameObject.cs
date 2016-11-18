@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace GraPlatformowa
 {
-    class GameObject
+    abstract class GameObject
     {
         protected Vector2 position = new Vector2(100, 100);
         protected Vector2 scale = new Vector2(50, 25);
