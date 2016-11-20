@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System.Text;
+using Microsoft.Xna.Framework.Media;
 
 namespace GraPlatformowa
 {
@@ -20,6 +21,12 @@ namespace GraPlatformowa
 
         private string currentView = "mainMenuView";
         private List<MenuItem> menuItems = new List<MenuItem>();
+
+        private string resolutionValue = "1600x900";
+        private bool fullscreenState = false;
+        private bool graphicsChangesAppliedState = false;
+        private bool musicState = true;
+        private bool soundsState = true;
 
         private bool gameStarted = false;
         private bool isVisible = true;
@@ -53,6 +60,14 @@ namespace GraPlatformowa
         {
             this.newGame = newGameState;
         }
+        public bool GetMusicState()
+        {
+            return musicState;
+        }
+        public bool GetSoundsState()
+        {
+            return soundsState;
+        }
 
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -80,6 +95,8 @@ namespace GraPlatformowa
             {
                 case "MainMenuView": MainMenuView(); break;
                 case "LevelsView": LevelsView(); break;
+                case "ResolutionView": ResolutionView(); break;
+                case "SoundView": SoundView(); break;
                 case "WinView": WinView(); break;
             }
         }
@@ -105,20 +122,20 @@ namespace GraPlatformowa
             currentView = "MainMenuView";
             if (gameStarted)
             {   //kolejność dodawania jest ważna.
-                menuItems.Add(new MenuItem(new Vector2(670, 250), "New game"));
-                menuItems.Add(new MenuItem(new Vector2(670, 350), "Levels"));
-                menuItems.Add(new MenuItem(new Vector2(670, 450), "Options"));
-                menuItems.Add(new MenuItem(new Vector2(670, 550), "Author"));
-                menuItems.Add(new MenuItem(new Vector2(670, 650), "Exit"));
-                menuItems.Add(new MenuItem(new Vector2(670, 150), "Resume"));
-            }
-            else
-            {
-                menuItems.Add(new MenuItem(new Vector2(670, 200), "New game"));
-                menuItems.Add(new MenuItem(new Vector2(670, 300), "Levels"));
+                menuItems.Add(new MenuItem(new Vector2(670, 300), "New game"));
+            //    menuItems.Add(new MenuItem(new Vector2(670, 350), "Levels"));
                 menuItems.Add(new MenuItem(new Vector2(670, 400), "Options"));
                 menuItems.Add(new MenuItem(new Vector2(670, 500), "Author"));
                 menuItems.Add(new MenuItem(new Vector2(670, 600), "Exit"));
+                menuItems.Add(new MenuItem(new Vector2(670, 200), "Resume"));
+            }
+            else
+            {
+                menuItems.Add(new MenuItem(new Vector2(670, 250), "New game"));
+           //     menuItems.Add(new MenuItem(new Vector2(670, 300), "Levels"));
+                menuItems.Add(new MenuItem(new Vector2(670, 350), "Options"));
+                menuItems.Add(new MenuItem(new Vector2(670, 450), "Author"));
+                menuItems.Add(new MenuItem(new Vector2(670, 550), "Exit"));
             }
         }
         private void LevelsView()
@@ -141,21 +158,29 @@ namespace GraPlatformowa
         private void ResolutionView()
         {
             currentView = "ResolutionView";
-            menuItems.Add(new MenuItem(new Vector2(670, 150), "800x600"));
-            menuItems.Add(new MenuItem(new Vector2(670, 250), "1024x768"));
-            menuItems.Add(new MenuItem(new Vector2(670, 350), "1366x768"));
-            menuItems.Add(new MenuItem(new Vector2(670, 450), "1600x900"));
-            menuItems.Add(new MenuItem(new Vector2(670, 550), "1980x1080"));
-            menuItems.Add(new MenuItem(new Vector2(670, 650), "Return"));
+            menuItems.Add(new MenuItem(new Vector2(670, 100), "800x600"));
+            menuItems.Add(new MenuItem(new Vector2(670, 200), "1024x768"));
+            menuItems.Add(new MenuItem(new Vector2(670, 300), "1366x768"));
+            menuItems.Add(new MenuItem(new Vector2(670, 400), "1600x900"));
+            menuItems.Add(new MenuItem(new Vector2(670, 500), "1920x1080"));
+            if(this.GetFullscreenState())
+                menuItems.Add(new MenuItem(new Vector2(670, 600), "Fullscreen: on"));
+            else
+                menuItems.Add(new MenuItem(new Vector2(670, 600), "Fullscreen: off"));
+            menuItems.Add(new MenuItem(new Vector2(670, 700), "Return"));
         }
         private void SoundView()
         {
             currentView = "SoundView";
-            menuItems.Add(new MenuItem(new Vector2(650, 200), "Turn music on"));
-            menuItems.Add(new MenuItem(new Vector2(650, 300), "Turn music off"));
-            menuItems.Add(new MenuItem(new Vector2(650, 400), "Turn sounds on"));
-            menuItems.Add(new MenuItem(new Vector2(650, 500), "Turn sounds off"));
-            menuItems.Add(new MenuItem(new Vector2(650, 600), "Return"));
+            if(GetMusicState())
+                menuItems.Add(new MenuItem(new Vector2(650, 250), "Background music: on"));
+            else
+                menuItems.Add(new MenuItem(new Vector2(650, 250), "Background music: off"));
+            if(GetSoundsState())
+                menuItems.Add(new MenuItem(new Vector2(650, 350), "Sounds on"));
+            else
+                menuItems.Add(new MenuItem(new Vector2(650, 350), "Sounds off"));
+            menuItems.Add(new MenuItem(new Vector2(650, 450), "Return"));
         }
         private void AuthorView()
         {
@@ -168,7 +193,7 @@ namespace GraPlatformowa
             menuItems.Add(new MenuItem(new Vector2(670, 600), "Return"));
         }
 
-        private void ViewsLogic(Game game)
+        private void ViewsLogic(Game game) // ------------------ Logika menu:
         {
             switch (currentView)
             {
@@ -176,11 +201,11 @@ namespace GraPlatformowa
                     switch (selected)
                     {  
                         case 0: this.newGame = true; this.gameStarted = true; this.isVisible = false; break; //new game
-                        case 1: menuItems.Clear(); LevelsView(); break;
-                        case 2: menuItems.Clear(); OptionsView(); break;
-                        case 3: menuItems.Clear(); AuthorView(); break;
-                        case 4: menuItems.Clear(); game.Exit(); break;
-                        case 5: this.isVisible = false; break; //resume
+               //         case 1: menuItems.Clear(); LevelsView(); break;
+                        case 1: menuItems.Clear(); OptionsView(); break;
+                        case 2: menuItems.Clear(); AuthorView(); break;
+                        case 3: menuItems.Clear(); game.Exit(); break;
+                        case 4: this.isVisible = false; break; //resume
                     }
                     break;
                 case "LevelsView":
@@ -205,15 +230,23 @@ namespace GraPlatformowa
                 case "ResolutionView":
                     switch (selected)
                     {
-                        case 0: break;
-                        case 5: menuItems.Clear(); OptionsView(); break;
+                        case 0: SetResolution("800x600"); this.graphicsChangesAppliedState = false; break;
+                        case 1: SetResolution("1024x768"); this.graphicsChangesAppliedState = false; break;
+                        case 2: SetResolution("1366x768"); this.graphicsChangesAppliedState = false; break;  
+                        case 3: SetResolution("1600x900"); this.graphicsChangesAppliedState = false; break;
+                        case 4: SetResolution("1920x1080"); this.graphicsChangesAppliedState = false; break;
+                        case 5: if (fullscreenState) SetFullscreen(false);
+                                else SetFullscreen(true); SetResolution("Default");
+                                this.graphicsChangesAppliedState = false; Clear(); break;
+                        case 6: menuItems.Clear(); OptionsView(); break;
                     }
                     break;
                 case "SoundView":
                     switch (selected)
                     {
-                        case 0: break;
-                        case 4: menuItems.Clear(); OptionsView(); break;
+                        case 0: if (musicState) { musicState = false; MediaPlayer.Stop(); } else { musicState = true; MediaPlayer.Play(Game1.menuMusic); } Clear(); break;
+                        case 1: if (soundsState) soundsState = false; else soundsState = true; Clear(); break;
+                        case 2: menuItems.Clear(); OptionsView(); break;
                     }
                     break;
                 case "AuthorView":
@@ -229,6 +262,37 @@ namespace GraPlatformowa
                     }
                     break;
             }
+        }
+
+
+        private void SetFullscreen(bool newState)
+        {
+            this.fullscreenState = newState;
+        }
+
+        private void SetResolution(string newRes)
+        {
+            this.resolutionValue = newRes;
+        }
+
+        public bool GetFullscreenState()
+        {
+            return this.fullscreenState;
+        }
+
+        public string GetResolution()
+        {
+            return this.resolutionValue;
+        }
+
+        public void SetGraphicsChangesState(bool newGraphicsChangesState)
+        {
+            this.graphicsChangesAppliedState = newGraphicsChangesState;
+        }
+
+        public bool GetGraphicsChangesState()
+        {
+            return this.graphicsChangesAppliedState;
         }
 
         //Input:

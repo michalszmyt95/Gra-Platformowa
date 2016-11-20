@@ -39,6 +39,8 @@ namespace GraPlatformowa
         private bool standing = false;
 
 
+        private bool soundState = true;
+
         // Delegaci dla eventów określających kiedy gracz wskoczył na blok i kiedy z niego zeskoczył:
         public delegate void PlayerEscapedFromBlockEventHandler(object source, EventArgs args);
         public event PlayerEscapedFromBlockEventHandler PlayerEscapedFromBlock;
@@ -70,6 +72,8 @@ namespace GraPlatformowa
             this.Gravity();
             this.Collision();
             this.Animation(gameTime);
+            if (this.soundState)
+                this.MakeSound(gameTime);
         }
 
         //Funkcja wywoływana w Draw gry:
@@ -85,6 +89,52 @@ namespace GraPlatformowa
             this.position = startPosition;
             this.velocity = new Vector2(0, 0);
             this.flip = SpriteEffects.None;
+        }
+
+        int timeElapsedForWalking = 0;
+        bool jumping = false;
+        bool hasLanded = false;
+
+
+        private void MakeSound(GameTime gameTime)
+        {
+            SoundEffectInstance footStep = Game1.footSteps.CreateInstance();
+            SoundEffectInstance jump = Game1.jump.CreateInstance();
+            SoundEffectInstance land = Game1.landing.CreateInstance();
+        //    footStep.Volume = 0.02f;
+        //    jump.Volume = 0.02f;
+        //    land.Volume = 0.01f;
+
+            timeElapsedForWalking += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (this.animateWalk && this.standing)
+            {
+                if (timeElapsedForWalking >= 130)
+                {
+                    if (land.State != SoundState.Playing) {
+                        footStep.Play();
+                        timeElapsedForWalking = 0;
+                    }
+                }
+            }
+            
+            if (this.animateJump)
+            {
+                if (!jumping){
+                    jump.Play();
+                    footStep.Stop();
+                    land.Stop();
+                    jumping = true;
+                }
+
+            }
+            
+            if ( this.standing && !this.hasLanded ) {
+                land.Play();
+                footStep.Stop();
+                hasLanded = true;
+                this.jumping = false;
+            }
+            if (!this.standing) hasLanded = false;
         }
 
         //Animacja:
@@ -153,6 +203,12 @@ namespace GraPlatformowa
             return this.velocity;
         }
 
+        public void SetSoundState(bool newState)
+        {
+            this.soundState = newState;
+        }
+
+
         //Funkcje determinujące ruch postaci:
         private void Move()
         {
@@ -194,6 +250,7 @@ namespace GraPlatformowa
             {
                 this.velocity.Y = -jumpSpeed;
                 this.animateJump = true;
+                this.animateWalk = false;
             }
         }
         private void Gravity()
