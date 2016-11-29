@@ -5,7 +5,6 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
@@ -103,7 +102,7 @@ namespace GraPlatformowa
             SoundEffectInstance land = Game1.landing.CreateInstance();
         //    footStep.Volume = 0.02f;
         //    jump.Volume = 0.02f;
-        //    land.Volume = 0.01f;
+            land.Volume = 0.3f;
 
             timeElapsedForWalking += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (this.animateWalk && this.standing)

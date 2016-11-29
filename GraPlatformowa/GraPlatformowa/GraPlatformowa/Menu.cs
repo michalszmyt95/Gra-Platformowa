@@ -22,7 +22,7 @@ namespace GraPlatformowa
         private string currentView = "mainMenuView";
         private List<MenuItem> menuItems = new List<MenuItem>();
 
-        private string resolutionValue = "1600x900";
+        private string resolutionValue; // = "1600x900";
         private bool fullscreenState = false;
         private bool graphicsChangesAppliedState = false;
         private bool musicState = true;
@@ -236,7 +236,7 @@ namespace GraPlatformowa
                         case 3: SetResolution("1600x900"); this.graphicsChangesAppliedState = false; break;
                         case 4: SetResolution("1920x1080"); this.graphicsChangesAppliedState = false; break;
                         case 5: if (fullscreenState) SetFullscreen(false);
-                                else SetFullscreen(true); SetResolution("Default");
+                            else SetFullscreen(true); SetResolution("Default");
                                 this.graphicsChangesAppliedState = false; Clear(); break;
                         case 6: menuItems.Clear(); OptionsView(); break;
                     }

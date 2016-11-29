@@ -10,11 +10,17 @@ namespace GraPlatformowa
         /// </summary>
         static void Main(string[] args)
         {
-            using (Game1 game = new Game1())
-            {
-                game.Run();
+            try {
+                using (Game1 game = new Game1())
+                {
+                    game.Run();
+                }
             }
-        }
+            catch (Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show(e.ToString());
+            }
+    }
     }
 #endif
 }

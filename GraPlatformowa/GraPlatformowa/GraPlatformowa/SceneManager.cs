@@ -5,7 +5,6 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
@@ -27,7 +26,6 @@ namespace GraPlatformowa
         public SceneManager(GraphicsDeviceManager newGraphics)
         {
             this.graphics = newGraphics;
-            this.Level1();
             Delegates();
         }
 
@@ -53,14 +51,7 @@ namespace GraPlatformowa
             else displayMenu = true;
 
             if (menu.GetNewGameState())
-            {
-                this.level = 1;
-                player.Restart();
-                staticBlocks.Clear();
-                this.Level1();
-                menu.SetNewGameState(false);
-                menu.Clear();
-            }
+                NewGame(1); // <-------------------- Ustalenie od którego poziomu startuje gra
 
             if (!displayMenu)
             {
@@ -69,10 +60,10 @@ namespace GraPlatformowa
                     if (menu.GetMusicState())
                     {
                         this.menuMusicStarted = false;
-                        MediaPlayer.Play(Game1.bgMusic);
+              //          MediaPlayer.Play(Game1.bgMusic); 
                         this.gameMusicStarted = true;
                     }
-                    else MediaPlayer.Stop();
+         //           else MediaPlayer.Stop();
                 }
 
                 for (int i = 0; i < staticBlocks.Count(); i++)
@@ -81,19 +72,11 @@ namespace GraPlatformowa
                 if (staticBlocks.Count() == 0)
                 {
                     this.level += 1;
-                    switch (level) //Wybór wyświetlania poziomu:
-                    {
-                        case 1: this.Level1(); player.Restart(); break;
-                        case 2: this.Level2(); player.Restart(); break;
-                        case 3: this.Level3(); player.Restart(); break;
-                        case 4: this.Level4(); player.Restart(); break;
-                        case 5: this.Level5(); player.Restart(); break;
-                        default: menu.SetIfPlayerWon(true); menu.DisplayWin(); menu.SetVisibility(true); break;
-                    }
+                    SwitchLevel(this.level);
                 }
-                Restart();
-                Delegates();
 
+                RestartLogic();
+                Delegates();
                 if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                     menu.SetVisibility(true);
                 if (!menu.GetVisibility())
@@ -105,11 +88,11 @@ namespace GraPlatformowa
                 {
                     if (menu.GetMusicState())
                     {
-                        MediaPlayer.Play(Game1.menuMusic);
+                  //      MediaPlayer.Play(Game1.menuMusic);
                         this.menuMusicStarted = true;
                         this.gameMusicStarted = false;
                     }
-                    else MediaPlayer.Stop();
+          //          else MediaPlayer.Stop();
                 }
 
                 
@@ -134,6 +117,7 @@ namespace GraPlatformowa
                 case "1366x768": ChangeResolution(1366,768); break;
                 case "1600x900": ChangeResolution(1600,900); break;
                 case "1920x1080": ChangeResolution(1920,1080); break;
+                default: break;
             }
             switch (menu.GetFullscreenState())
             {
@@ -166,12 +150,11 @@ namespace GraPlatformowa
             }
         }
 
-        private void Restart()
+        private void RestartLogic()
         {
             if (player.GetPosition().Y > 1000 && !everyBlockIsDisappearing())
             {
                 player.Restart();
-
                 staticBlocks.RemoveRange(0, staticBlocks.Count());
                 this.level -= 1;
             }
@@ -193,13 +176,51 @@ namespace GraPlatformowa
             return false;
         }
 
+        private void NewGame(int lvl)
+        {
+            if (staticBlocks.Count != 0)
+                staticBlocks.Clear();
+            this.level = lvl;
+            SwitchLevel(lvl);
+            menu.SetNewGameState(false);
+            menu.Clear();
+        }
 
-
+        private void SwitchLevel(int lvl)
+        {
+            switch (lvl) //Wybór wyświetlania poziomu:
+            {
+                case 1: this.Level1(); player.Restart(); break;
+                case 2: this.Level2(); player.Restart(); break;
+                case 3: this.Level3(); player.Restart(); break;
+                case 4: this.Level4(); player.Restart(); break;
+                case 5: this.Level5(); player.Restart(); break;
+                case 6: this.Level6(); player.Restart(); break;
+                case 7: this.Level7(); player.Restart(); break;
+                case 8: this.Level8(); player.Restart(); break;
+                case 9: this.Level9(); player.Restart(); break;
+                case 10: this.Level10(); player.Restart(); break;
+                default: menu.SetIfPlayerWon(true); menu.DisplayWin(); menu.SetVisibility(true); break;
+            }
+        }
 
         /// <summary>
         /// Poniżej znajdują się poziomy gry:
         /// </summary>
+        /// 
         private void Level1()
+        {
+            new BlueBlock(new Vector2(293, 280));
+
+            new BlueBlock(new Vector2(600, 440));
+            new BlueBlock(new Vector2(680, 420));
+            new BlueBlock(new Vector2(760, 400));
+            new BlueBlock(new Vector2(840, 380));
+            new BlueBlock(new Vector2(920, 360));
+
+            new RedBlock(new Vector2(1240, 520));
+        }
+        private void Level2()
         {
             for (int i = 2; i < 8; i += 2)
             {
@@ -211,72 +232,196 @@ namespace GraPlatformowa
                     new BlueBlock(new Vector2(120, 120 + 80 * (i-1)));
             }
             new BlueBlock(new Vector2(293, 280));
-            new BlueBlock(new Vector2(535, 425));
-            new BlueBlock(new Vector2(925, 425));
+            new BlueBlock(new Vector2(435, 425));
+            new BlueBlock(new Vector2(705, 525));
+            new BlueBlock(new Vector2(975, 425));
 
             new BlueBlock(new Vector2(1260, 335));
             new RedBlock(new Vector2(1340, 440));
             new RedBlock(new Vector2(1420, 275));
         }
-        private void Level2()
+        private void Level3()
         {
-            // new BlueBlock(new Vector2(10, 200));
+            for (int i = 0; i < 3; i++)
+            {
+                new BlueBlock(new Vector2(293 + i * 400, 280));
+                new BlueBlock(new Vector2(353 + i * 400, 280));
+                new BlueBlock(new Vector2(413 + i * 400, 280));
+                new BlueBlock(new Vector2(473 + i * 400, 280));
+            }
+
+            new GreenBlock(new Vector2(583, 500));
+            new GreenBlock(new Vector2(983, 500));
+
+            new BlueBlock(new Vector2(293, 600));
+            new BlueBlock(new Vector2(1273, 600));
+            new RedBlock(new Vector2(783, 700));
+        }
+        private void Level4()
+        {
+            new BlueBlock(new Vector2(293, 280));
+            new BlueBlock(new Vector2(353, 280));
             for (int i = 0; i < 11; i++)
             {
-                new RedBlock(new Vector2(60 + (120 * i), 600 - (15 * i)));
-                new RedBlock(new Vector2(120 + (120 * i), 600 - (15 * i)));
+                if (i < 3 || i > 7)
+                {
+                    new RedBlock(new Vector2(150 + (120 * i), 600 - (15 * i)));
+                    new RedBlock(new Vector2(210 + (120 * i), 600 - (15 * i)));
+                }
             }
             new RedBlock(new Vector2(800, 400));
             new RedBlock(new Vector2(720, 300));
             new RedBlock(new Vector2(640, 200));
         }
-        private void Level3()
-        {
-          //  new BlueBlock(new Vector2(10, 200));
-            for (int i = 1; i < 10; i++)
-                new RedBlock(new Vector2(200 + (100 * i), 400));
-            new BlueBlock(new Vector2(600, 250));
-            new BlueBlock(new Vector2(700, 300));
-            new BlueBlock(new Vector2(500, 300));
-        }
-        private void Level4()
-        {
-         //   new BlueBlock(new Vector2(10, 100));
-            new BlueBlock(new Vector2(300, 320));
-            new BlueBlock(new Vector2(390, 300));
-           // new BlueBlock(new Vector2(280, 100));
-           // new BlueBlock(new Vector2(370, 100));
-            new BlueBlock(new Vector2(580, 200));
-            new GreenBlock(new Vector2(600+330, 200));
-            new BlueBlock(new Vector2(900 + 330, 100));
-            new RedBlock(new Vector2(1050 + 330, 180));
-            new RedBlock(new Vector2(10, 600));
-            new RedBlock(new Vector2(100, 600));
-            new RedBlock(new Vector2(190, 600));
-            new RedBlock(new Vector2(280, 600));
-            new RedBlock(new Vector2(370, 600));
-        }
         private void Level5()
         {
-            for (int i = 0; i < 3; i++) //5 bloków przy sobie
-                new BlueBlock(new Vector2(300 + 50 * i, 350));
-            for (int i = 0; i < 3; i++)
-                new BlueBlock(new Vector2(300 + 50 * i, 200));
-            for (int i = 0; i < 5; i++)
-                new RedBlock(new Vector2(550 + 50 * i, 350 - i * 15));
-            for (int i = 0; i < 3; i++)
-                new RedBlock(new Vector2(300 + 50 * i, 500));
-            new RedBlock(new Vector2(1000, 300));
-            new BlueBlock(new Vector2(1250, 300));
+            new BlueBlock(new Vector2(293, 280));
+            new BlueBlock(new Vector2(353, 260));
+            new BlueBlock(new Vector2(413, 240));
+            new BlueBlock(new Vector2(473, 220));
 
-            new GreenBlock(new Vector2(700, 575));
-            for (int i = 0; i < 6; i++)
-                new RedBlock(new Vector2(1000 + 50 * i, 700));
-            new GreenBlock(new Vector2(550, 700));
-            new BlueBlock(new Vector2(300, 700));
-            for (int i = 0; i < 6; i++)
-                new RedBlock(new Vector2(1000 + 50 * i, 500));
+            new BlueBlock(new Vector2(693, 340));
+            new BlueBlock(new Vector2(753, 320));
+            new BlueBlock(new Vector2(813, 300));
+            new BlueBlock(new Vector2(873, 280));
+
+            new BlueBlock(new Vector2(1093, 400));
+            new BlueBlock(new Vector2(1153, 380));
+            new BlueBlock(new Vector2(1213, 360));
+            new BlueBlock(new Vector2(1273, 340));
+
+            new BlueBlock(new Vector2(393-30, 680));
+            new BlueBlock(new Vector2(453 - 30, 700));
+            new BlueBlock(new Vector2(513 - 30, 720));
+            new BlueBlock(new Vector2(573 - 30, 740));
+
+            new BlueBlock(new Vector2(893+50, 700));
+            new BlueBlock(new Vector2(953+50, 680));
+            new BlueBlock(new Vector2(1013+50, 660));
+            new BlueBlock(new Vector2(1073 + 50, 640));
+
+                new RedBlock(new Vector2(510, 515));
+            new RedBlock(new Vector2(990, 515));
+
+            new RedBlock(new Vector2(150, 800));
+            new RedBlock(new Vector2(750, 800));
+            new RedBlock(new Vector2(1400, 800));
         }
+        private void Level6()
+        {
 
+            new BlueBlock(new Vector2(293, 280));
+            new BlueBlock(new Vector2(650, 220));
+            new GreenBlock(new Vector2(600+400, 240));
+            new BlueBlock(new Vector2(900 + 400, 140));
+            new RedBlock(new Vector2(1050 + 400, 220));
+            new RedBlock(new Vector2(80, 740));
+            new RedBlock(new Vector2(170, 740));
+            new RedBlock(new Vector2(260, 740));
+            new RedBlock(new Vector2(350, 740));
+            new RedBlock(new Vector2(440, 740));
+        }
+        private void Level7()
+        {
+            for (int i = 0; i < 3; i++) //5 bloków przy sobie
+                new BlueBlock(new Vector2(300 + 50 * i, 320));
+            for (int i = 0; i < 3; i++)
+                new BlueBlock(new Vector2(300 + 50 * i, 170));
+            for (int i = 0; i < 5; i++)
+                new RedBlock(new Vector2(550 + 50 * i, 320 - i * 15));
+            for (int i = 0; i < 3; i++)
+                new RedBlock(new Vector2(300 + 50 * i, 470));
+            new RedBlock(new Vector2(1000, 270));
+            new BlueBlock(new Vector2(1250, 270));
+            new GreenBlock(new Vector2(700, 545));
+            for (int i = 0; i < 6; i++)
+                new RedBlock(new Vector2(1000 + 50 * i, 670));
+            new GreenBlock(new Vector2(550, 670));
+            new BlueBlock(new Vector2(300, 670));
+            for (int i = 0; i < 6; i++)
+                new RedBlock(new Vector2(1000 + 50 * i, 470));
+        }
+        private void Level8()
+        {
+            new BlueBlock(new Vector2(293, 280));
+            new RedBlock(new Vector2(400, 100));
+            new RedBlock(new Vector2(400, 850));
+            new RedBlock(new Vector2(540, 700));
+            new GreenBlock(new Vector2(860, 660));
+            new RedBlock(new Vector2(1220, 700));
+            new RedBlock(new Vector2(1000, 550));
+            new RedBlock(new Vector2(680, 550));
+            new RedBlock(new Vector2(820, 400));
+            new RedBlock(new Vector2(1220, 450));
+            new RedBlock(new Vector2(1440, 350));
+            new GreenBlock(new Vector2(1220, 250));
+            new RedBlock(new Vector2(1440, 150));
+            new RedBlock(new Vector2(900, 200));
+            new RedBlock(new Vector2(700, 150));
+            new RedBlock(new Vector2(150, 700));
+        }
+        private void Level9()
+        {
+            new BlueBlock(new Vector2(293, 280));
+            new RedBlock(new Vector2(740, 460));
+            new GreenBlock(new Vector2(1000, 340));
+            new RedBlock(new Vector2(1260, 440));
+            new RedBlock(new Vector2(1340, 460));
+            new RedBlock(new Vector2(400, 560));
+            new RedBlock(new Vector2(1100, 300));
+            new BlueBlock(new Vector2(740, 220));
+            new RedBlock(new Vector2(920, 170));
+            new RedBlock(new Vector2(460, 140));
+            new BlueBlock(new Vector2(740, 720));
+            new RedBlock(new Vector2(900, 800));
+            new RedBlock(new Vector2(1000, 620));
+            new RedBlock(new Vector2(1360, 800));
+        }
+        private void Level10()
+        {
+            new BlueBlock(new Vector2(293, 280));
+            new RedBlock(new Vector2(323, 305));
+            new RedBlock(new Vector2(353, 330));
+            new RedBlock(new Vector2(383, 355));
+            new RedBlock(new Vector2(413, 330));
+            new RedBlock(new Vector2(443, 305));
+            new RedBlock(new Vector2(473, 280));
+            new RedBlock(new Vector2(383, 380));
+            new RedBlock(new Vector2(383, 405));
+           
+            for (int i = 0; i<6; i++)
+            {
+                if (i != 0 && i != 5)
+                {
+                    new RedBlock(new Vector2(550, 280 + 25 * i));
+                    new RedBlock(new Vector2(650, 280 + 25 * i));
+                }
+                if ( i == 0 || i == 5)
+                    new RedBlock(new Vector2(600, 280 + 25 * i));
+
+                if (i != 5)
+                {
+                    new RedBlock(new Vector2(750, 280 + 25 * i));
+                    new RedBlock(new Vector2(850, 280 + 25 * i));
+                }
+                
+                new RedBlock(new Vector2(550, 550 + 25 * i));
+                new RedBlock(new Vector2(750, 550 + 25 * i)); 
+                new RedBlock(new Vector2(850, 550 + 25 * i));
+                new RedBlock(new Vector2(950, 550 + 25 * i));
+                new RedBlock(new Vector2(1100, 550 + 25 * i));
+
+            }
+            new RedBlock(new Vector2(800, 405));
+            new RedBlock(new Vector2(600, 650));
+            new RedBlock(new Vector2(650, 625));
+            new RedBlock(new Vector2(700, 650));
+
+
+
+            new RedBlock(new Vector2(1050, 600));
+            new RedBlock(new Vector2(1000, 575));
+
+        }
     }
 }
