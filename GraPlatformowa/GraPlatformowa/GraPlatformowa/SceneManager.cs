@@ -15,25 +15,29 @@ namespace GraPlatformowa
     {
         Player player = new Player(new Vector2(300,250), Game1.playerLegsAnimationTexture, Game1.playerHeadTexture);
         Menu menu = new Menu();
+        SoundEffectInstance menuMusic = Game1.menuMusic.CreateInstance();
+        SoundEffectInstance bgMusic = Game1.bgMusic.CreateInstance();
+        List<SoundEffectInstance> AllMusic = new List<SoundEffectInstance>();
+        MusicManager music;
         GraphicsDeviceManager graphics;
 
         public static List<Block> staticBlocks = new List<Block>();
         private int level = 1;
-        private bool displayMenu = true;
-        private bool gameMusicStarted = false;
-        private bool menuMusicStarted = false;
 
         public SceneManager(GraphicsDeviceManager newGraphics)
         {
             this.graphics = newGraphics;
             Delegates();
+            AllMusic.Add(menuMusic);
+            AllMusic.Add(bgMusic);
+            music = new MusicManager(ref this.AllMusic);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch) //DRAW GRY
         {
-            if (displayMenu)
+            if (menu.GetVisibility())
                 menu.Draw(spriteBatch);
-            else
+            else if(!menu.GetVisibility())
             {
                 DrawLevels(spriteBatch);
                 if (!menu.GetVisibility())
@@ -41,64 +45,65 @@ namespace GraPlatformowa
             } 
         }
 
-        public void Update(GameTime gameTime,Game1 game)
+        private void DrawLevels(SpriteBatch spriteBatch)
         {
-            if (menu.GetSoundsState()) player.SetSoundState(true);
-            else player.SetSoundState(false);
+            foreach (Block block in staticBlocks)
+            {
+                block.Draw(spriteBatch);
+            }
+        }
 
+        public void Update(GameTime gameTime,Game1 game) //UPDATE GRY
+        {
             ManageResolution();
-            if (menu.GetVisibility() == false) displayMenu = false;
-            else displayMenu = true;
+            ManageSounds();
 
             if (menu.GetNewGameState())
                 NewGame(1); // <-------------------- Ustalenie od którego poziomu startuje gra
 
-            if (!displayMenu)
+            if (menu.GetVisibility())
+                menu.Update(gameTime, game);
+            else
+                ManageGameplay(gameTime);
+        }
+
+        private void ManageSounds()
+        {
+            if (menu.GetSoundsState())
+                player.SetSoundState(true);
+            else
+                player.SetSoundState(false);
+
+            if (menu.GetMusicState())
             {
-                if (!this.gameMusicStarted)
+                switch (menu.GetVisibility())
                 {
-                    if (menu.GetMusicState())
-                    {
-                        this.menuMusicStarted = false;
-              //          MediaPlayer.Play(Game1.bgMusic); 
-                        this.gameMusicStarted = true;
-                    }
-         //           else MediaPlayer.Stop();
+                    case true: music.PlayOnlyThis(ref menuMusic); break;
+                    case false: music.PlayOnlyThis(ref bgMusic); break;
                 }
-
-                for (int i = 0; i < staticBlocks.Count(); i++)
-                    staticBlocks[i].Update();
-
-                if (staticBlocks.Count() == 0)
-                {
-                    this.level += 1;
-                    SwitchLevel(this.level);
-                }
-
-                RestartLogic();
-                Delegates();
-                if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                    menu.SetVisibility(true);
-                if (!menu.GetVisibility())
-                    player.Update(gameTime);
             }
             else
             {
-                if (!this.menuMusicStarted)
-                {
-                    if (menu.GetMusicState())
-                    {
-                  //      MediaPlayer.Play(Game1.menuMusic);
-                        this.menuMusicStarted = true;
-                        this.gameMusicStarted = false;
-                    }
-          //          else MediaPlayer.Stop();
-                }
+                music.StopAllMusic();
+            }
+        }
 
-                
-                menu.Update(gameTime,game);
+        private void ManageGameplay(GameTime gameTime) {
+            for (int i = 0; i < staticBlocks.Count(); i++)
+                staticBlocks[i].Update();
+
+            if (staticBlocks.Count() == 0)
+            {
+                this.level += 1;
+                SwitchLevel(this.level);
             }
 
+            RestartLogic();
+            Delegates();
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                menu.SetVisibility(true);
+            if (!menu.GetVisibility())
+                player.Update(gameTime);
         }
 
         private void ApplyGraphicsChanges()
@@ -133,14 +138,6 @@ namespace GraPlatformowa
             ApplyGraphicsChanges();
         }
 
-        private void DrawLevels(SpriteBatch spriteBatch)
-        {
-            foreach(Block block in staticBlocks)
-            {
-                    block.Draw(spriteBatch);
-            }
-        }
-
         private void Delegates()
         {
             foreach (Block block in SceneManager.staticBlocks)
@@ -152,7 +149,7 @@ namespace GraPlatformowa
 
         private void RestartLogic()
         {
-            if (player.GetPosition().Y > 1000 && !everyBlockIsDisappearing())
+            if (player.GetPosition().Y > 1000 && !CheckIfEveryBlockIsDisappearing())
             {
                 player.Restart();
                 staticBlocks.RemoveRange(0, staticBlocks.Count());
@@ -160,7 +157,7 @@ namespace GraPlatformowa
             }
         }
 
-        private bool everyBlockIsDisappearing()
+        private bool CheckIfEveryBlockIsDisappearing()
         {
             int j = 0;
             for (int i = 0; i < staticBlocks.Count(); i++)
@@ -183,7 +180,7 @@ namespace GraPlatformowa
             this.level = lvl;
             SwitchLevel(lvl);
             menu.SetNewGameState(false);
-            menu.Clear();
+            menu.Refresh();
         }
 
         private void SwitchLevel(int lvl)
@@ -208,6 +205,7 @@ namespace GraPlatformowa
         /// Poniżej znajdują się poziomy gry:
         /// </summary>
         /// 
+        #region POZIOMY GRY REGION
         private void Level1()
         {
             new BlueBlock(new Vector2(293, 280));
@@ -398,13 +396,11 @@ namespace GraPlatformowa
                 }
                 if ( i == 0 || i == 5)
                     new RedBlock(new Vector2(600, 280 + 25 * i));
-
                 if (i != 5)
                 {
                     new RedBlock(new Vector2(750, 280 + 25 * i));
                     new RedBlock(new Vector2(850, 280 + 25 * i));
                 }
-                
                 new RedBlock(new Vector2(550, 550 + 25 * i));
                 new RedBlock(new Vector2(750, 550 + 25 * i)); 
                 new RedBlock(new Vector2(850, 550 + 25 * i));
@@ -416,12 +412,9 @@ namespace GraPlatformowa
             new RedBlock(new Vector2(600, 650));
             new RedBlock(new Vector2(650, 625));
             new RedBlock(new Vector2(700, 650));
-
-
-
             new RedBlock(new Vector2(1050, 600));
             new RedBlock(new Vector2(1000, 575));
-
         }
+        #endregion
     }
 }

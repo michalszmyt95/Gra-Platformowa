@@ -19,8 +19,7 @@ namespace GraPlatformowa
 
         public static Texture2D playerLegsAnimationTexture, blueBlockTexture, redBlockTexture, greenBlockTexture, playerHeadTexture;
         public static SpriteFont menuFont;
-        public static Song bgMusic, menuMusic;
-        public static SoundEffect footSteps, jump, landing;
+        public static SoundEffect footSteps, jump, landing, bgMusic, menuMusic;
 
         public Game1()
         {
@@ -49,20 +48,28 @@ namespace GraPlatformowa
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //£adowanie zasobów:
-                    //Tekstury
-            playerHeadTexture = Content.Load<Texture2D>("playerHead");
-            playerLegsAnimationTexture = Content.Load<Texture2D>("playerLegsAnimation");
-            blueBlockTexture = Content.Load<Texture2D>("blue2");
-            redBlockTexture = Content.Load<Texture2D>("red2");
-            greenBlockTexture = Content.Load<Texture2D>("green2");
-                    //Zasoby muzyczne
-            bgMusic = Content.Load<Song>("BackgroundMusic");
-            menuMusic = Content.Load<Song>("MenuMusic");
-            footSteps = Content.Load<SoundEffect>("FootStep");
-            jump = Content.Load<SoundEffect>("Jump");
-            landing = Content.Load<SoundEffect>("Landing");
-                    //Czcionki
-            menuFont = Content.Load<SpriteFont>("Menu");
+            try {
+                //Tekstury
+                playerHeadTexture = Content.Load<Texture2D>("playerHead");
+                playerLegsAnimationTexture = Content.Load<Texture2D>("playerLegsAnimation");
+                blueBlockTexture = Content.Load<Texture2D>("blue2");
+                redBlockTexture = Content.Load<Texture2D>("red2");
+                greenBlockTexture = Content.Load<Texture2D>("green2");
+                //Zasoby muzyczne
+                bgMusic = Content.Load<SoundEffect>("BackgroundMusic");
+                menuMusic = Content.Load<SoundEffect>("MenuMusic");
+                footSteps = Content.Load<SoundEffect>("FootStep");
+                jump = Content.Load<SoundEffect>("Jump");
+                landing = Content.Load<SoundEffect>("Landing");
+                //Czcionki
+                menuFont = Content.Load<SpriteFont>("Menu");
+            }
+            catch
+            {
+
+                System.Windows.Forms.MessageBox.Show("Brak dostêpu do contentu gry (folder \"Content\").\nMo¿liwe, ¿e usuniêto jakieœ pliki, przemieszczono je, lub zmieniono nazwê folderu \"Content\" na inn¹.");
+
+            }
 
         }
 

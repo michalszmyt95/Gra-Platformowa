@@ -37,7 +37,6 @@ namespace GraPlatformowa
         private float friction = 2f;
         private bool standing = false;
 
-
         private bool soundState = true;
 
         // Delegaci dla eventów określających kiedy gracz wskoczył na blok i kiedy z niego zeskoczył:

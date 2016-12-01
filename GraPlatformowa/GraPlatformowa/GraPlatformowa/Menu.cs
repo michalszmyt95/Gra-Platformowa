@@ -44,31 +44,6 @@ namespace GraPlatformowa
             Selecting(game);
         }
 
-        public bool GetVisibility()
-        {
-            return isVisible;
-        }
-        public void SetVisibility(bool newIsVisible)
-        {
-            isVisible = newIsVisible;
-        }
-        public bool GetNewGameState()
-        {
-            return newGame;
-        }
-        public void SetNewGameState(bool newGameState)
-        {
-            this.newGame = newGameState;
-        }
-        public bool GetMusicState()
-        {
-            return musicState;
-        }
-        public bool GetSoundsState()
-        {
-            return soundsState;
-        }
-
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (MenuItem menuItem in menuItems)
@@ -88,35 +63,43 @@ namespace GraPlatformowa
             }
         }
 
-        public void Clear()
+        #region INPUT REGION
+
+        private void UpdateKeyboardState()
         {
-            menuItems.Clear();
-            switch (currentView)
+            this.lastKbState = kbState;
+            this.kbState = Keyboard.GetState();
+        }
+
+        private void Selecting(Game1 game)
+        { //Logika zaznaczania:
+            if (kbState.IsKeyDown(Keys.W) && !lastKbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.Up) && !lastKbState.IsKeyDown(Keys.Up))
             {
-                case "MainMenuView": MainMenuView(); break;
-                case "LevelsView": LevelsView(); break;
-                case "ResolutionView": ResolutionView(); break;
-                case "SoundView": SoundView(); break;
-                case "WinView": WinView(); break;
+                selected -= 1;
+            }
+            else if (kbState.IsKeyDown(Keys.S) && !lastKbState.IsKeyDown(Keys.S) || kbState.IsKeyDown(Keys.Down) && !lastKbState.IsKeyDown(Keys.Down))
+            {
+                selected += 1;
+            }
+            for (int i = 0; i < menuItems.Count; i++)
+            {
+                if (selected == i) menuItems[i].isItSelected(true);
+                else menuItems[i].isItSelected(false);
+            }
+            if (selected > menuItems.Count - 1)
+                selected = 0;
+            if (selected < 0)
+                selected = menuItems.Count - 1;
+
+            //Co ma się dziać przy wybraniu danego pola Enterem:
+            if (kbState.IsKeyDown(Keys.Enter) && !lastKbState.IsKeyDown(Keys.Enter))
+            {   // Po wciśnięciu klawisza Enter funkcja ViewsLogic decyduje o tym, co ma się wykonać dalej przy obecnym zaznaczeniu elementu.
+                ViewsLogic(game);
             }
         }
+        #endregion
 
-        public void DisplayWin()
-        {
-            if (playerWon)
-            {
-                WinView();
-                Clear();
-                playerWon = false;
-            }
-        }
-
-        public void SetIfPlayerWon(bool playerWon)
-        {
-            this.playerWon = playerWon;
-        }
-
-        //Inicjacja widoków menu:
+        #region WIDOKI REGION
         private void MainMenuView()
         {
             currentView = "MainMenuView";
@@ -192,6 +175,32 @@ namespace GraPlatformowa
             currentView = "WinView";
             menuItems.Add(new MenuItem(new Vector2(670, 600), "Return"));
         }
+        #endregion
+
+        #region LOGIKA WIDOKÓW REGION
+
+        public void Refresh()  // Funkcja odświeżająca menu. Np użytkownik kliknie na fullscreen ON, teraz menu sie odświeży, by zmienić na OFF.
+        {
+            menuItems.Clear();
+            switch (currentView)
+            {
+                case "MainMenuView": MainMenuView(); break;
+                case "LevelsView": LevelsView(); break;
+                case "ResolutionView": ResolutionView(); break;
+                case "SoundView": SoundView(); break;
+                case "WinView": WinView(); break;
+            }
+        }
+
+        public void DisplayWin()   // Widok wygranej gracza:
+        {
+            if (playerWon)
+            {
+                WinView();
+                Refresh();
+                playerWon = false;
+            }
+        }
 
         private void ViewsLogic(Game game) // ------------------ Logika menu:
         {
@@ -237,15 +246,15 @@ namespace GraPlatformowa
                         case 4: SetResolution("1920x1080"); this.graphicsChangesAppliedState = false; break;
                         case 5: if (fullscreenState) SetFullscreen(false);
                             else SetFullscreen(true); SetResolution("Default");
-                                this.graphicsChangesAppliedState = false; Clear(); break;
+                                this.graphicsChangesAppliedState = false; Refresh(); break;
                         case 6: menuItems.Clear(); OptionsView(); break;
                     }
                     break;
                 case "SoundView":
                     switch (selected)
                     {
-                        case 0: if (musicState) { musicState = false; MediaPlayer.Stop(); } else { musicState = true; MediaPlayer.Play(Game1.menuMusic); } Clear(); break;
-                        case 1: if (soundsState) soundsState = false; else soundsState = true; Clear(); break;
+                        case 0: if (musicState) musicState = false; else musicState = true; Refresh(); break;
+                        case 1: if (soundsState) soundsState = false; else soundsState = true; Refresh(); break;
                         case 2: menuItems.Clear(); OptionsView(); break;
                     }
                     break;
@@ -263,70 +272,62 @@ namespace GraPlatformowa
                     break;
             }
         }
+        #endregion
 
-
+        #region GETY I SETY REGION
         private void SetFullscreen(bool newState)
         {
             this.fullscreenState = newState;
         }
-
         private void SetResolution(string newRes)
         {
             this.resolutionValue = newRes;
         }
-
         public bool GetFullscreenState()
         {
             return this.fullscreenState;
         }
-
         public string GetResolution()
         {
             return this.resolutionValue;
         }
-
         public void SetGraphicsChangesState(bool newGraphicsChangesState)
         {
             this.graphicsChangesAppliedState = newGraphicsChangesState;
         }
-
         public bool GetGraphicsChangesState()
         {
             return this.graphicsChangesAppliedState;
         }
-
-        //Input:
-        private void UpdateKeyboardState()
+        public bool GetVisibility()
         {
-            this.lastKbState = kbState;
-            this.kbState = Keyboard.GetState();
+            return isVisible;
         }
-
-        private void Selecting(Game1 game)
-        { //Logika zaznaczania:
-            if(kbState.IsKeyDown(Keys.W) && !lastKbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.Up) && !lastKbState.IsKeyDown(Keys.Up))
-            {
-                selected -= 1;
-            }
-            else if(kbState.IsKeyDown(Keys.S) && !lastKbState.IsKeyDown(Keys.S) || kbState.IsKeyDown(Keys.Down) && !lastKbState.IsKeyDown(Keys.Down))
-            {
-                selected += 1;
-            }
-            for(int i = 0; i< menuItems.Count; i++)
-            {
-                if (selected == i) menuItems[i].isItSelected(true);
-                else menuItems[i].isItSelected(false);
-            }
-            if (selected > menuItems.Count-1)
-                selected = 0;
-            if (selected < 0)
-                selected = menuItems.Count-1;
-
-            //Co ma się dziać przy wybraniu danego pola Enterem:
-            if (kbState.IsKeyDown(Keys.Enter) && !lastKbState.IsKeyDown(Keys.Enter))
-            {   // Po wciśnięciu klawisza Enter funkcja ViewsLogic decyduje o tym, co ma się wykonać dalej przy obecnym zaznaczeniu elementu.
-                ViewsLogic(game);
-            }
+        public void SetVisibility(bool newIsVisible)
+        {
+            isVisible = newIsVisible;
         }
+        public bool GetNewGameState()
+        {
+            return newGame;
+        }
+        public void SetNewGameState(bool newGameState)
+        {
+            this.newGame = newGameState;
+        }
+        public bool GetMusicState()
+        {
+            return musicState;
+        }
+        public bool GetSoundsState()
+        {
+            return soundsState;
+        }
+        public void SetIfPlayerWon(bool playerWon)
+        {
+            this.playerWon = playerWon;
+        }
+        #endregion
+        
     }
 }
