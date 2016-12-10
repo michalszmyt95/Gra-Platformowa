@@ -21,10 +21,10 @@ namespace GraPlatformowa
         }
 
         List<SoundEffectInstance> isPlaying = new List<SoundEffectInstance>();
-
+        
         public void Play(ref SoundEffectInstance music)
         {
-            music.Volume = 0.10f;
+            music.Volume = 0.60f;
             foreach (var currentMusic in isPlaying)
             {
                 if (currentMusic == music)
@@ -38,8 +38,8 @@ namespace GraPlatformowa
 
             isPlaying.Add(music);
         }
-
-        public void PlayOnlyThis(ref SoundEffectInstance music)
+        // Zatrzymuje wszystkie piosenki i puszcza tę pojedynczą:
+        public void PlayOnlyThis(ref SoundEffectInstance music) 
         {
             foreach (var currentMusic in isPlaying)
             {

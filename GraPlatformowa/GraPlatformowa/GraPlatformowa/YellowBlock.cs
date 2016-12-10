@@ -7,13 +7,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GraPlatformowa
 {
-    class GreenBlock : Block
+    class YellowBlock : Block
     {
-        public GreenBlock(Vector2 newPosition)
+        public YellowBlock(Vector2 newPosition)
         {
             this.position.X = newPosition.X;
             this.position.Y = newPosition.Y;
-            this.texture = Game1.greenBlockTexture;
+            this.texture = Game1.yellowBlockTexture;
             this.rect.X = (int)newPosition.X;
             this.rect.Y = (int)newPosition.Y;
             this.rect.Width = (int)this.scale.X;

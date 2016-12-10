@@ -7,7 +7,7 @@ namespace GraPlatformowa
     {
         static void Main(string[] args)
         {
-            bool debugging = false;
+            bool debugging = true;
             try {
                 using (Game1 game = new Game1())
                 {

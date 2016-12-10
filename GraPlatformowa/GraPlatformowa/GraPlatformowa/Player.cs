@@ -13,6 +13,7 @@ namespace GraPlatformowa
 {
     class Player : GameObject
     {
+        #region ZMIENNE POSTACI
         //Zmienne dla animacji/rysowania:
         private Texture2D headTexture;
         private Texture2D legsTexture;
@@ -24,6 +25,9 @@ namespace GraPlatformowa
         private bool animateJump = false;
         private bool animateWalk = false;
         private Vector2 headPositionDifference;
+        int timeElapsedForWalking = 0;
+        bool jumping = false;
+        bool hasLanded = false;
 
         //Zmienne logiki postaci:
         private KeyboardState kbState;
@@ -38,6 +42,8 @@ namespace GraPlatformowa
         private bool standing = false;
 
         private bool soundState = true;
+
+        #endregion
 
         // Delegaci dla eventów określających kiedy gracz wskoczył na blok i kiedy z niego zeskoczył:
         public delegate void PlayerEscapedFromBlockEventHandler(object source, EventArgs args);
@@ -82,6 +88,14 @@ namespace GraPlatformowa
             spriteBatch.Draw(this.headTexture, headPosition, null, Color.White, 0, new Vector2(0,0), new Vector2(1, 1), flip, 0);
         }
 
+        #region DODATKOWE FUNKCJE
+
+        //Input:
+        private void UpdateKeyboardState()
+        {
+            this.kbState = Keyboard.GetState();
+        }
+
         public void Restart()
         {
             this.position = startPosition;
@@ -89,18 +103,29 @@ namespace GraPlatformowa
             this.flip = SpriteEffects.None;
         }
 
-        int timeElapsedForWalking = 0;
-        bool jumping = false;
-        bool hasLanded = false;
+        //Funkcja która dostaje referencje danej zmiennej liczbowej, 
+        //która ma stać się wartością argumentu 'To', zwiększając się o wartość argumentu speed.
+        private void valueTo(ref float value, float to, float speed)
+        {
+            if (value < to) value += speed;
+            else if (value > to) value -= speed;
+            if (Math.Abs(value - to) < speed) value = to;
+        }
 
+        #endregion
+
+        #region DŹWIĘK
+
+        public void SetSoundState(bool newState)
+        {
+            this.soundState = newState;
+        }
 
         private void MakeSound(GameTime gameTime)
         {
             SoundEffectInstance footStep = Game1.footSteps.CreateInstance();
             SoundEffectInstance jump = Game1.jump.CreateInstance();
             SoundEffectInstance land = Game1.landing.CreateInstance();
-        //    footStep.Volume = 0.02f;
-        //    jump.Volume = 0.02f;
             land.Volume = 0.3f;
 
             timeElapsedForWalking += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -135,6 +160,9 @@ namespace GraPlatformowa
             if (!this.standing) hasLanded = false;
         }
 
+        #endregion
+
+        #region ANIMACJA
         //Animacja:
         private void Animation(GameTime gameTime)
         {
@@ -174,18 +202,6 @@ namespace GraPlatformowa
             timeElapsed = 0;
         }
 
-        //Input:
-        private void UpdateKeyboardState(){
-            this.kbState = Keyboard.GetState();
-        }
-
-        //Funkcja która dostaje referencje danej zmiennej liczbowej, 
-        //która ma stać się wartością argumentu To, zwiększając się o wartość argumentu speed.
-        private void valueTo(ref float value, float to, float speed){
-            if (value < to) value += speed;
-            else if (value > to) value -= speed;
-            if (Math.Abs(value - to) < speed) value = to;
-        }
         private void HeadMove(){
             if (this.velocity.Y > 0) valueTo(ref headPositionDifference.Y, -22 -this.velocity.Y, 0.7f);
             else if (this.velocity.Y < 0) valueTo(ref headPositionDifference.Y, -15, 2 );
@@ -194,18 +210,18 @@ namespace GraPlatformowa
             else valueTo(ref headPositionDifference.X, 0, 0.6f);
         }
 
-        public Vector2 GetLastPosition(){
+        #endregion
+
+        #region RUCH POSTACI I POZYCJA
+
+        public Vector2 GetLastPosition()
+        {
             return this.lastPosition;
         }
-        public Vector2 GetVelocity(){
+        public Vector2 GetVelocity()
+        {
             return this.velocity;
         }
-
-        public void SetSoundState(bool newState)
-        {
-            this.soundState = newState;
-        }
-
 
         //Funkcje determinujące ruch postaci:
         private void Move()
@@ -275,4 +291,5 @@ namespace GraPlatformowa
         }
         
     }
+    #endregion
 }

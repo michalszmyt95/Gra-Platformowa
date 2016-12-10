@@ -17,7 +17,7 @@ namespace GraPlatformowa
         SceneManager sceneManager;
         RenderTarget2D target;
 
-        public static Texture2D playerLegsAnimationTexture, blueBlockTexture, redBlockTexture, greenBlockTexture, playerHeadTexture;
+        public static Texture2D playerLegsAnimationTexture, blueBlockTexture, redBlockTexture, yellowBlockTexture, playerHeadTexture;
         public static SpriteFont menuFont;
         public static SoundEffect footSteps, jump, landing, bgMusic, menuMusic;
 
@@ -32,12 +32,11 @@ namespace GraPlatformowa
 
         }
 
-        // Inicjalizacja zewnêtrznych zasobów gry (takich jak muzyka)
+        // Inicjalizacja zewnêtrznych zasobów gry
         protected override void Initialize()
         {
             base.Initialize();
             sceneManager = new SceneManager(graphics);
-            MediaPlayer.IsRepeating = true;
             target = new RenderTarget2D(GraphicsDevice, 1600, 900); //<-- Ustawienie rozdzielczoœci gry, któr¹ bêdzie mo¿na skalowaæ do docelowych rozdzielczoœci gracza.
         }
 
@@ -54,7 +53,7 @@ namespace GraPlatformowa
                 playerLegsAnimationTexture = Content.Load<Texture2D>("playerLegsAnimation");
                 blueBlockTexture = Content.Load<Texture2D>("blue2");
                 redBlockTexture = Content.Load<Texture2D>("red2");
-                greenBlockTexture = Content.Load<Texture2D>("green2");
+                yellowBlockTexture = Content.Load<Texture2D>("yellow2");
                 //Zasoby muzyczne
                 bgMusic = Content.Load<SoundEffect>("BackgroundMusic");
                 menuMusic = Content.Load<SoundEffect>("MenuMusic");
@@ -66,11 +65,8 @@ namespace GraPlatformowa
             }
             catch
             {
-
                 System.Windows.Forms.MessageBox.Show("Brak dostêpu do contentu gry (folder \"Content\").\nMo¿liwe, ¿e usuniêto jakieœ pliki, przemieszczono je, lub zmieniono nazwê folderu \"Content\" na inn¹.");
-
             }
-
         }
 
         protected override void UnloadContent(){}

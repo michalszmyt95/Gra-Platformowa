@@ -21,6 +21,7 @@ namespace GraPlatformowa
 
         private string currentView = "mainMenuView";
         private List<MenuItem> menuItems = new List<MenuItem>();
+        private int elementsToLeft = 670;
 
         private string resolutionValue; // = "1600x900";
         private bool fullscreenState = false;
@@ -35,6 +36,13 @@ namespace GraPlatformowa
 
         public Menu()
         {
+            MainMenuView();
+        }
+
+        public Menu(Color selectedColor, Color unselectedColor)
+        {
+            this.selectedColor = selectedColor;
+            this.unselectedColor = unselectedColor;
             MainMenuView();
         }
 
@@ -105,77 +113,76 @@ namespace GraPlatformowa
             currentView = "MainMenuView";
             if (gameStarted)
             {   //kolejność dodawania jest ważna.
-                menuItems.Add(new MenuItem(new Vector2(670, 300), "New game"));
-            //    menuItems.Add(new MenuItem(new Vector2(670, 350), "Levels"));
-                menuItems.Add(new MenuItem(new Vector2(670, 400), "Options"));
-                menuItems.Add(new MenuItem(new Vector2(670, 500), "Author"));
-                menuItems.Add(new MenuItem(new Vector2(670, 600), "Exit"));
-                menuItems.Add(new MenuItem(new Vector2(670, 200), "Resume"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 300), "New game"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 400), "Options"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 500), "Author"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 600), "Exit"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 200), "Resume"));
             }
             else
             {
-                menuItems.Add(new MenuItem(new Vector2(670, 250), "New game"));
-           //     menuItems.Add(new MenuItem(new Vector2(670, 300), "Levels"));
-                menuItems.Add(new MenuItem(new Vector2(670, 350), "Options"));
-                menuItems.Add(new MenuItem(new Vector2(670, 450), "Author"));
-                menuItems.Add(new MenuItem(new Vector2(670, 550), "Exit"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 250), "New game"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 350), "Options"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 450), "Author"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 550), "Exit"));
             }
         }
         private void LevelsView()
         {
             currentView = "LevelsView";
-            menuItems.Add(new MenuItem(new Vector2(670, 100), "Level1"));
-            menuItems.Add(new MenuItem(new Vector2(670, 200), "Level2"));
-            menuItems.Add(new MenuItem(new Vector2(670, 300), "Level3"));
-            menuItems.Add(new MenuItem(new Vector2(670, 400), "Level4"));
-            menuItems.Add(new MenuItem(new Vector2(670, 500), "Level5"));
-            menuItems.Add(new MenuItem(new Vector2(670, 600), "Return"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 100), "Level1"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 200), "Level2"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 300), "Level3"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 400), "Level4"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 500), "Level5"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 600), "Return"));
         }
         private void OptionsView()
         {
             currentView = "OptionsView";
-            menuItems.Add(new MenuItem(new Vector2(670, 300), "Resolution"));
-            menuItems.Add(new MenuItem(new Vector2(670, 400), "Sound"));
-            menuItems.Add(new MenuItem(new Vector2(670, 500), "Return"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 300), "Resolution"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 400), "Sound"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 500), "Return"));
         }
         private void ResolutionView()
         {
             currentView = "ResolutionView";
-            menuItems.Add(new MenuItem(new Vector2(670, 100), "800x600"));
-            menuItems.Add(new MenuItem(new Vector2(670, 200), "1024x768"));
-            menuItems.Add(new MenuItem(new Vector2(670, 300), "1366x768"));
-            menuItems.Add(new MenuItem(new Vector2(670, 400), "1600x900"));
-            menuItems.Add(new MenuItem(new Vector2(670, 500), "1920x1080"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 100), "800x600"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 200), "1024x768"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 300), "1366x768"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 400), "1600x900"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 500), "1920x1080"));
             if(this.GetFullscreenState())
-                menuItems.Add(new MenuItem(new Vector2(670, 600), "Fullscreen: on"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 600), "Fullscreen: on"));
             else
-                menuItems.Add(new MenuItem(new Vector2(670, 600), "Fullscreen: off"));
-            menuItems.Add(new MenuItem(new Vector2(670, 700), "Return"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 600), "Fullscreen: off"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 700), "Return"));
         }
         private void SoundView()
         {
             currentView = "SoundView";
             if(GetMusicState())
-                menuItems.Add(new MenuItem(new Vector2(650, 250), "Background music: on"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 300), "Background music: on"));
             else
-                menuItems.Add(new MenuItem(new Vector2(650, 250), "Background music: off"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 300), "Background music: off"));
             if(GetSoundsState())
-                menuItems.Add(new MenuItem(new Vector2(650, 350), "Sounds on"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 400), "Sounds on"));
             else
-                menuItems.Add(new MenuItem(new Vector2(650, 350), "Sounds off"));
-            menuItems.Add(new MenuItem(new Vector2(650, 450), "Return"));
+                menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 400), "Sounds off"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 500), "Return"));
         }
         private void AuthorView()
         {
             currentView = "AuthorView";
-            menuItems.Add(new MenuItem(new Vector2(670, 600), "Return"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 600), "Return"));
         }
         private void WinView()
         {
             currentView = "WinView";
-            menuItems.Add(new MenuItem(new Vector2(670, 600), "Return"));
+            menuItems.Add(new MenuItem(new Vector2(elementsToLeft, 600), "Return"));
         }
         #endregion
+
 
         #region LOGIKA WIDOKÓW REGION
 

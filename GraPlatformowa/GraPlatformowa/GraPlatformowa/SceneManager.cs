@@ -88,7 +88,9 @@ namespace GraPlatformowa
             }
         }
 
-        private void ManageGameplay(GameTime gameTime) {
+        #region LOGIKA GAMEPLAYU
+        private void ManageGameplay(GameTime gameTime)
+        {
             for (int i = 0; i < staticBlocks.Count(); i++)
                 staticBlocks[i].Update();
 
@@ -104,47 +106,6 @@ namespace GraPlatformowa
                 menu.SetVisibility(true);
             if (!menu.GetVisibility())
                 player.Update(gameTime);
-        }
-
-        private void ApplyGraphicsChanges()
-        {
-            if (!menu.GetGraphicsChangesState())
-                graphics.ApplyChanges();
-            menu.SetGraphicsChangesState(true);
-        }
-
-        private void ManageResolution()
-        {
-            switch (menu.GetResolution())
-            {
-                case "800x600": ChangeResolution(800,600); break;
-                case "1024x768": ChangeResolution(1024,768); break;
-                case "1366x768": ChangeResolution(1366,768); break;
-                case "1600x900": ChangeResolution(1600,900); break;
-                case "1920x1080": ChangeResolution(1920,1080); break;
-                default: break;
-            }
-            switch (menu.GetFullscreenState())
-            {
-                case true: graphics.IsFullScreen = true; ApplyGraphicsChanges(); break;
-                case false: graphics.IsFullScreen = false; ApplyGraphicsChanges(); break;
-            }
-        }
-
-        private void ChangeResolution(int width,int height)
-        {
-            graphics.PreferredBackBufferWidth = width;
-            graphics.PreferredBackBufferHeight = height;
-            ApplyGraphicsChanges();
-        }
-
-        private void Delegates()
-        {
-            foreach (Block block in SceneManager.staticBlocks)
-            {
-                player.PlayerGetOnBlock += block.OnPlayerGetOnBlock;
-                player.PlayerEscapedFromBlock += block.OnPlayerEscapedFromBlock;
-            }
         }
 
         private void RestartLogic()
@@ -171,6 +132,50 @@ namespace GraPlatformowa
             if (j == staticBlocks.Count())
                 return true;
             return false;
+        }
+
+        private void Delegates() // Obsługa zdarzeń o których informuje gracz poprzez delegaty
+        {
+            foreach (Block block in SceneManager.staticBlocks)
+            {
+                player.PlayerGetOnBlock += block.OnPlayerGetOnBlock;
+                player.PlayerEscapedFromBlock += block.OnPlayerEscapedFromBlock;
+            }
+        }
+        #endregion
+
+        #region LOGIKA SCEN I ROZDZIELCZOŚCI
+
+        private void ApplyGraphicsChanges()
+        {
+            if (!menu.GetGraphicsChangesState())
+                graphics.ApplyChanges();
+            menu.SetGraphicsChangesState(true);
+        }
+
+        private void ChangeResolution(int width, int height)
+        {
+            graphics.PreferredBackBufferWidth = width;
+            graphics.PreferredBackBufferHeight = height;
+            ApplyGraphicsChanges();
+        }
+
+        private void ManageResolution()
+        {
+            switch (menu.GetResolution())
+            {
+                case "800x600": ChangeResolution(800, 600); break;
+                case "1024x768": ChangeResolution(1024, 768); break;
+                case "1366x768": ChangeResolution(1366, 768); break;
+                case "1600x900": ChangeResolution(1600, 900); break;
+                case "1920x1080": ChangeResolution(1920, 1080); break;
+                default: break;
+            }
+            switch (menu.GetFullscreenState())
+            {
+                case true: graphics.IsFullScreen = true; ApplyGraphicsChanges(); break;
+                case false: graphics.IsFullScreen = false; ApplyGraphicsChanges(); break;
+            }
         }
 
         private void NewGame(int lvl)
@@ -201,11 +206,10 @@ namespace GraPlatformowa
             }
         }
 
-        /// <summary>
-        /// Poniżej znajdują się poziomy gry:
-        /// </summary>
-        /// 
-        #region POZIOMY GRY REGION
+
+        #endregion
+
+        #region POZIOMY GRY
         private void Level1()
         {
             new BlueBlock(new Vector2(293, 280));
@@ -225,7 +229,7 @@ namespace GraPlatformowa
                 if (i != 4)
                     new BlueBlock(new Vector2(140, 120+80 * i));
                 else
-                    new GreenBlock(new Vector2(160, 120 + 80 * i));
+                    new YellowBlock(new Vector2(160, 120 + 80 * i));
                 if(i != 2)
                     new BlueBlock(new Vector2(120, 120 + 80 * (i-1)));
             }
@@ -248,8 +252,8 @@ namespace GraPlatformowa
                 new BlueBlock(new Vector2(473 + i * 400, 280));
             }
 
-            new GreenBlock(new Vector2(583, 500));
-            new GreenBlock(new Vector2(983, 500));
+            new YellowBlock(new Vector2(583, 500));
+            new YellowBlock(new Vector2(983, 500));
 
             new BlueBlock(new Vector2(293, 600));
             new BlueBlock(new Vector2(1273, 600));
@@ -310,7 +314,7 @@ namespace GraPlatformowa
 
             new BlueBlock(new Vector2(293, 280));
             new BlueBlock(new Vector2(650, 220));
-            new GreenBlock(new Vector2(600+400, 240));
+            new YellowBlock(new Vector2(600+400, 240));
             new BlueBlock(new Vector2(900 + 400, 140));
             new RedBlock(new Vector2(1050 + 400, 220));
             new RedBlock(new Vector2(80, 740));
@@ -331,10 +335,10 @@ namespace GraPlatformowa
                 new RedBlock(new Vector2(300 + 50 * i, 470));
             new RedBlock(new Vector2(1000, 270));
             new BlueBlock(new Vector2(1250, 270));
-            new GreenBlock(new Vector2(700, 545));
+            new YellowBlock(new Vector2(700, 545));
             for (int i = 0; i < 6; i++)
                 new RedBlock(new Vector2(1000 + 50 * i, 670));
-            new GreenBlock(new Vector2(550, 670));
+            new YellowBlock(new Vector2(550, 670));
             new BlueBlock(new Vector2(300, 670));
             for (int i = 0; i < 6; i++)
                 new RedBlock(new Vector2(1000 + 50 * i, 470));
@@ -345,14 +349,14 @@ namespace GraPlatformowa
             new RedBlock(new Vector2(400, 100));
             new RedBlock(new Vector2(400, 850));
             new RedBlock(new Vector2(540, 700));
-            new GreenBlock(new Vector2(860, 660));
+            new YellowBlock(new Vector2(860, 660));
             new RedBlock(new Vector2(1220, 700));
             new RedBlock(new Vector2(1000, 550));
             new RedBlock(new Vector2(680, 550));
             new RedBlock(new Vector2(820, 400));
             new RedBlock(new Vector2(1220, 450));
             new RedBlock(new Vector2(1440, 350));
-            new GreenBlock(new Vector2(1220, 250));
+            new YellowBlock(new Vector2(1220, 250));
             new RedBlock(new Vector2(1440, 150));
             new RedBlock(new Vector2(900, 200));
             new RedBlock(new Vector2(700, 150));
@@ -362,7 +366,7 @@ namespace GraPlatformowa
         {
             new BlueBlock(new Vector2(293, 280));
             new RedBlock(new Vector2(740, 460));
-            new GreenBlock(new Vector2(1000, 340));
+            new YellowBlock(new Vector2(1000, 340));
             new RedBlock(new Vector2(1260, 440));
             new RedBlock(new Vector2(1340, 460));
             new RedBlock(new Vector2(400, 560));
